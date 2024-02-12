@@ -14,3 +14,12 @@ class Question(models.Model):
             return f"{self.text[:50]}..."
         else:
             return self.text
+
+
+class Answer(models.Model):
+    """ User's answer """
+    answer = models.FloatField()
+
+    def __str__(self):
+        return self.answer
+

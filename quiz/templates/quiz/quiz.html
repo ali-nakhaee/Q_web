@@ -1,0 +1,17 @@
+{% extends "quiz/base.html" %}
+
+{% block content %}
+
+  <p>Quiz</p>
+
+  <p>{{ question }}</p>
+
+  <form action="{% url 'quiz:quiz' %}" method='post'>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button name="submit">Answer</button>
+  </form>
+
+  <p>{{ evaluation }}</p>
+
+{% endblock content %}
