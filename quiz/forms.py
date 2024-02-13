@@ -10,8 +10,7 @@ class QuestionForm(forms.ModelForm):
         labels = {'text': ''}
 
 
-class AnswerForm(forms.ModelForm):
-    class Meta:
-        model = Answer
-        fields = ['answer']
-        labels = {'answer': ''}
+class AnswerForm(forms.Form):
+    answer1 = forms.FloatField()
+    answer2 = forms.FloatField()
+

@@ -1,17 +1,21 @@
 {% extends "quiz/base.html" %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 
   <p>Quiz</p>
-
-  <p>{{ question }}</p>
-
+  
   <form action="{% url 'quiz:quiz' %}" method='post'>
     {% csrf_token %}
-    {{ form.as_p }}
-    <button name="submit">Answer</button>
+  <li><a>{{ question_texts.0 }}</a></li>
+  {{form.answer1|as_crispy_field}}
+  {{ evaluation.0 }}
+  <li><a>{{ question_texts.1 }}</a></li>
+  {{form.answer2|as_crispy_field}}
+  {{ evaluation.1 }}
+  <button type="submit">Answer</button>
   </form>
 
-  <p>{{ evaluation }}</p>
+  
 
 {% endblock content %}

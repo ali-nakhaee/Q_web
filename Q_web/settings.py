@@ -18,10 +18,15 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 INSTALLED_APPS = [
     # My apps.
     "quiz",
+
+    # Third party apps
+    "crispy_forms",
+    "crispy_bootstrap4",
 
     # Default django apps.
     "django.contrib.admin",
