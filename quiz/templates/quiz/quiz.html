@@ -8,10 +8,14 @@
   <form action="{% url 'quiz:quiz' %}" method='post'>
     {% csrf_token %}
   <li><a>{{ question_texts.0 }}</a></li>
-  {{form.answer1|as_crispy_field}}
+  {{ form1.as_p }}
   {{ evaluation.0 }}
+  <button type="submit" >Save</button>
+  </form>
+  <form action="{% url 'quiz:quiz' %}" method="post">
+    {% csrf_token %}
   <li><a>{{ question_texts.1 }}</a></li>
-  {{form.answer2|as_crispy_field}}
+  {{ form2 }}
   {{ evaluation.1 }}
   <button type="submit">Answer</button>
   </form>
