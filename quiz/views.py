@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.forms import formset_factory
 
 from .models import Question
-from .forms import AnswerForm
+from .forms import QuestionForm
 
 
 def index(request):
@@ -13,11 +13,7 @@ def index(request):
 def quiz(request):
     """ Show quiz page. """
     question_num = 2
-    AnswerFormSet = formset_factory(AnswerForm, extra=question_num)
-    question_texts = [''] * question_num
-    for question_id in range(1, question_num + 1):
-        question = Question.objects.get(id=question_id)
-        question_texts[question_id - 1] = question.text
+    QuestionFormSet = formset_factory(QuestionForm, extra=question_num)
 
     evaluation = []
     """if request.method != 'POST':
@@ -40,5 +36,5 @@ def quiz(request):
         else:
             evaluation.append(f"Your answer is False. Correct answer is {question.answer}.")"""
 
-    context = {'question_texts': question_texts, 'formset': AnswerFormSet, 'evaluation': evaluation}
+    context = {'formset': QuestionFormSet, 'evaluation': evaluation}
     return render(request, 'quiz/quiz.html', context)

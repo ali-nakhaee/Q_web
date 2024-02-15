@@ -1,16 +1,10 @@
 from django import forms
 
-from .models import Question, Answer
+from .models import Question
 
 
 class QuestionForm(forms.ModelForm):
     class Meta:
         model = Question
-        fields = ['text']
-        labels = {'text': ''}
-
-
-class AnswerForm(forms.ModelForm):
-    class Meta:
-        model = Answer
-        fields = ['answer']
+        fields = ['text', 'user_answer']
+        labels = {'text': 'question text', 'user_answer': 'write your answer...'}

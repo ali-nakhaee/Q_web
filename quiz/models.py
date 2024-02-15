@@ -4,7 +4,8 @@ from django.db import models
 class Question(models.Model):
     """ A question with its answer."""
     text = models.TextField()
-    answer = models.FloatField()
+    true_answer = models.FloatField()
+    user_answer = models.FloatField(default=0)
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -14,11 +15,3 @@ class Question(models.Model):
             return f"{self.text[:50]}..."
         else:
             return self.text
-
-
-class Answer(models.Model):
-    """ User's answer """
-    answer = models.FloatField()
-
-    def __str__(self):
-        return self.answer
