@@ -1,5 +1,4 @@
 {% extends "quiz/base.html" %}
-{% load crispy_forms_tags %}
 
 {% block content %}
 
@@ -7,18 +6,13 @@
   
   <form action="{% url 'quiz:quiz' %}" method='post'>
     {% csrf_token %}
-  <li><a>{{ question_texts.0 }}</a></li>
-  {{ form1.as_p }}
+    {% for form in formset %}
+    <li><a>{{ question_texts.0 }}</a></li>
+      {{ form }}
+    {% endfor %}
+
   {{ evaluation.0 }}
   <button type="submit" >Save</button>
-  </form>
-  <form action="{% url 'quiz:quiz' %}" method="post">
-    {% csrf_token %}
-  <li><a>{{ question_texts.1 }}</a></li>
-  {{ form2 }}
-  {{ evaluation.1 }}
-  <button type="submit">Answer</button>
-  </form>
 
   
 

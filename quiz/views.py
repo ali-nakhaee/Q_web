@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.forms import formset_factory
 
 from .models import Question
 from .forms import AnswerForm
@@ -12,23 +13,20 @@ def index(request):
 def quiz(request):
     """ Show quiz page. """
     question_num = 2
+    AnswerFormSet = formset_factory(AnswerForm, extra=question_num)
     question_texts = [''] * question_num
     for question_id in range(1, question_num + 1):
         question = Question.objects.get(id=question_id)
         question_texts[question_id - 1] = question.text
 
     evaluation = []
-    context = {}
-    if request.method != 'POST':
+    """if request.method != 'POST':
         # No data submitted; create a blank Quiz.
-        for i in range(1, question_num + 1):
-            context[f"form{i}"] = AnswerForm()
-            evaluation.append(i)
+
     
-    """else:
+    else:
         # POST data submitted; process data.
-        form = AnswerForm(data=request.POST)
-        user_answer1 = request.POST.get('answer1')
+
         question = Question.objects.get(id=1)
         if float(user_answer1) == question.answer:
             evaluation.append("Your answer is True.")
@@ -42,5 +40,5 @@ def quiz(request):
         else:
             evaluation.append(f"Your answer is False. Correct answer is {question.answer}.")"""
 
-    context = {'question_texts': question_texts, 'evaluation': evaluation}
+    context = {'question_texts': question_texts, 'formset': AnswerFormSet, 'evaluation': evaluation}
     return render(request, 'quiz/quiz.html', context)

@@ -11,7 +11,6 @@ class QuestionForm(forms.ModelForm):
 
 
 class AnswerForm(forms.ModelForm):
-    # answer = forms.FloatField(initial=2.4)
     class Meta:
         model = Answer
         fields = ['answer']
