@@ -12,8 +12,14 @@ def index(request):
 
 def quiz(request):
     """ Show quiz page. """
-    question_num = 2
-    QuestionFormSet = formset_factory(QuestionForm, extra=question_num)
+    question_num = 3
+    questions = []
+    for question_id in range(1, question_num):
+        question = Question.objects.get(id=question_id)
+        questions.append({'text': question.text})
+
+    QuestionFormSet = formset_factory(QuestionForm, extra=0)
+    formset = QuestionFormSet(initial=questions)
 
     evaluation = []
     """if request.method != 'POST':
@@ -36,5 +42,5 @@ def quiz(request):
         else:
             evaluation.append(f"Your answer is False. Correct answer is {question.answer}.")"""
 
-    context = {'formset': QuestionFormSet, 'evaluation': evaluation}
+    context = {'formset': formset, 'evaluation': evaluation}
     return render(request, 'quiz/quiz.html', context)

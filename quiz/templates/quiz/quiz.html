@@ -7,7 +7,7 @@
   <form action="{% url 'quiz:quiz' %}" method='post'>
     {% csrf_token %}
     {% for form in formset %}
-      {{ form }} <br>
+      {{ form.text }} <br>
     {% endfor %}
 
   {{ evaluation.0 }}
