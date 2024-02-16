@@ -8,10 +8,11 @@
     {% csrf_token %}
     {% for form in formset %}
       {{ form.text }} <br>
+      {{ form.user_answer }} <br>
     {% endfor %}
 
   {{ evaluation.0 }}
-  <button type="submit" >Save</button>
+  <button type="submit" >Answer</button>
 
   
 
