@@ -14,19 +14,23 @@ def quiz(request):
     """ Show quiz page. """
     question_num = 3
     questions = []
-    for question_id in range(1, question_num):
+    for question_id in range(1, question_num + 1):
         question = Question.objects.get(id=question_id)
         questions.append({'text': question.text, 'true_answer': question.true_answer})
 
     QuestionFormSet = formset_factory(QuestionForm, extra=0)
 
-    evaluation = []
+    evaluation = [''] * question_num
     if request.method != 'POST':
         # No data submitted; create a blank Quiz.
         formset = QuestionFormSet(initial=questions)
-
+        evaluation[0] = 'hello'
+        evaluation[1] = 'bye'
     else:
         # POST data submitted; process data.
+        date = request.POST
+        text1 = date['form-0-user_answer']
+        evaluation.append(text1)
         formset = QuestionFormSet(data=request.POST, initial=questions)
         # user_answers = QuestionFormSet.cleaned_data[0]['user_answer']
         evaluation.append('your answer is true...')
