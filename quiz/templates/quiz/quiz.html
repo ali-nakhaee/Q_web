@@ -9,7 +9,8 @@
     {% for form in formset %}
       {{ form.text }} <br>
       {{ form.user_answer }} <br>
-      {{ evluation.forloop.counter1 }}
+      {{ form.evaluation }} <br>
+      {{ forloop.counter }} <br>
     {% endfor %}
 
   {{ evaluation.0 }}

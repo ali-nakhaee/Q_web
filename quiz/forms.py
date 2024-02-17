@@ -7,9 +7,12 @@ class QuestionForm(forms.ModelForm):
 
     class Meta:
         model = Question
-        fields = ['text', 'user_answer']
-        labels = {'text': 'question text', 'user_answer': 'write your answer...'}
+        fields = ['text']
+        labels = {'text': 'question text'}
         # widgets = {'text': forms.FloatField(attrs={'readonly': True})}
+
+    evaluation = forms.BooleanField()
+    user_answer = forms.FloatField()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

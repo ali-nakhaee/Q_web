@@ -5,7 +5,6 @@ class Question(models.Model):
     """ A question with its answer."""
     text = models.TextField()
     true_answer = models.FloatField()
-    user_answer = models.FloatField()
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

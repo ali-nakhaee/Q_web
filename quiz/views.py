@@ -16,7 +16,7 @@ def quiz(request):
     questions = []
     for question_id in range(1, question_num + 1):
         question = Question.objects.get(id=question_id)
-        questions.append({'text': question.text, 'true_answer': question.true_answer})
+        questions.append({'text': question.text, 'true_answer': question.true_answer, 'user_answer': ''})
 
     QuestionFormSet = formset_factory(QuestionForm, extra=0)
 
@@ -28,10 +28,10 @@ def quiz(request):
         evaluation[1] = 'bye'
     else:
         # POST data submitted; process data.
-        date = request.POST
-        text1 = date['form-0-user_answer']
+        data = request.POST
+        text1 = data['form-0-user_answer']
         evaluation.append(text1)
-        formset = QuestionFormSet(data=request.POST, initial=questions)
+        formset = QuestionFormSet(data=data, initial=questions)
         # user_answers = QuestionFormSet.cleaned_data[0]['user_answer']
         evaluation.append('your answer is true...')
 
