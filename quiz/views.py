@@ -28,25 +28,18 @@ def quiz(request):
         evaluation[1] = 'bye'
     else:
         # POST data submitted; process data.
+        # request.data._mutable = True
         data = request.POST
         text1 = data['form-0-user_answer']
         evaluation.append(text1)
         formset = QuestionFormSet(data=data, initial=questions)
-        # user_answers = QuestionFormSet.cleaned_data[0]['user_answer']
-        evaluation.append('your answer is true...')
-
-        '''question = Question.objects.get(id=1)
-        if float(user_answer1) == question.answer:
-            evaluation.append("Your answer is True.")
+        answer1 = Question.objects.get(id=1).true_answer
+        '''if float(data['form-0-user_answer']) == answer1:
+            data['form-0-evaluation'] = 'Your answer is True.'
         else:
-            evaluation.append(f"Your answer is False. Correct answer is {question.answer}.")
+            data['form-0-evaluation'] = 'Your answer is False'  '''
 
-        user_answer2 = request.POST.get('answer2')
-        question = Question.objects.get(id=2)
-        if float(user_answer2) == question.answer:
-            evaluation.append("Your answer is True.")
-        else:
-            evaluation.append(f"Your answer is False. Correct answer is {question.answer}.")'''
+        formset = QuestionFormSet(data=data, initial=questions)
 
     context = {'formset': formset, 'evaluation': evaluation}
     return render(request, 'quiz/quiz.html', context)

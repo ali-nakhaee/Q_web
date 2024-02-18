@@ -6,6 +6,7 @@
   
   <form action="{% url 'quiz:quiz' %}" method='post'>
     {% csrf_token %}
+    {{ formset.management_form.as_p }}
     {% for form in formset %}
       {{ form.text }} <br>
       {{ form.user_answer }} <br>
@@ -13,7 +14,7 @@
       {{ forloop.counter }} <br>
     {% endfor %}
 
-  {{ evaluation.0 }}
+  {{ evaluation.2 }}
   <button type="submit" >Answer</button>
 
   

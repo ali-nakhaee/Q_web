@@ -11,8 +11,8 @@ class QuestionForm(forms.ModelForm):
         labels = {'text': 'question text'}
         # widgets = {'text': forms.FloatField(attrs={'readonly': True})}
 
-    evaluation = forms.BooleanField()
     user_answer = forms.FloatField()
+    evaluation = forms.CharField()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
