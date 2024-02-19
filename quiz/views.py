@@ -29,31 +29,13 @@ def quiz(request):
         query_dict = request.POST
         data = query_dict.copy()
         if formset.is_valid():
-            for i in range(1, question_num):
+            for i in range(0, question_num):
                 user_answer = formset.cleaned_data[i]['user_answer']
-                true_answer = Question.objects.get(id=i-1).true_answer
+                true_answer = Question.objects.get(id=i+1).true_answer
                 if float(user_answer) == true_answer:
-                    data['form-0-evaluation'] = 'Your answer is True.'
+                    data[f'form-{i}-evaluation'] = 'Your answer is True.'
                 else:
-                    data['form-0-evaluation'] = 'Your answer is False.'
-
-            """a = formset.cleaned_data[0]['user_answer']
-            data["form-0-evaluation"] = a
-            answer1 = Question.objects.get(id=1).true_answer
-            if float(a) == answer1:
-                data['form-0-evaluation'] = 'Your answer is True.'
-        else:
-            data['form-0-evaluation'] = 'Your answer is False.'
-        # data['form-0-user_answer'] """
-
-        """for i in range(1, question_num + 1):
-            answer = Question.objects.get(id=i).true_answer
-            if float(data[i]['user_answer']) == answer:
-                data[i]['user_answer'] = 'Your answer is True.'
-            else:
-                data[i]['user_answer'] = 'Your answer is False.' """
-
+                    data[f'form-{i}-evaluation'] = 'Your answer is False.'
         formset = QuestionFormSet(data=data, initial=questions)
-
     context = {'formset': formset}
     return render(request, 'quiz/quiz.html', context)
