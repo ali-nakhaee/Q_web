@@ -7,16 +7,15 @@
   <form action="{% url 'quiz:quiz' %}" method='post'>
     {% csrf_token %}
     {{ formset.management_form.as_p }}
+    <!--{{ formset.errors }}-->
     {% for form in formset %}
       {{ form.text }} <br>
       {{ form.user_answer }} <br>
       {{ form.evaluation }} <br>
       {{ forloop.counter }} <br>
+      {{ form.errors }} <br>
     {% endfor %}
-
-  {{ evaluation.2 }}
   <button type="submit" >Answer</button>
-
-  
+  </form>
 
 {% endblock content %}
