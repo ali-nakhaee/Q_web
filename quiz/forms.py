@@ -14,3 +14,11 @@ class QuestionForm(forms.Form):
         self.fields["text"].widget.attrs.update(readonly=True)
         self.fields["user_answer"].required = False
         self.fields["evaluation"].required = False
+
+
+class AddQuestionForm(forms.ModelForm):
+
+    class Meta:
+        model = Question
+        fields = ['text', 'true_answer']
+        labels = {'text': 'text', 'true_answer': 'true answer'}

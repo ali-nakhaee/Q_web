@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.forms import formset_factory
 
 from .models import Question
-from .forms import QuestionForm
+from .forms import QuestionForm, AddQuestionForm
 
 
 def index(request):
@@ -12,7 +12,7 @@ def index(request):
 
 def quiz(request):
     """ Show quiz page. """
-    question_num = 3
+    question_num = Question.objects.all().count()
     questions = []
     for question_id in range(1, question_num + 1):
         question = Question.objects.get(id=question_id)
@@ -46,3 +46,20 @@ def quiz(request):
         percent = round((true_answers_num / question_num) * 100)
     context = {'formset': formset, 'percent': percent}
     return render(request, 'quiz/quiz.html', context)
+
+
+def add_question(request):
+    """ Add a new question to database. """
+    if request.method != 'POST':
+        # No data submitted; create a blank form.
+        form = AddQuestionForm()
+    else:
+        # POST data submitted; process data.
+        form = AddQuestionForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('quiz:index')
+
+    # Display a blank or invalid form.
+    context = {'form': form}
+    return render(request, 'quiz/add_question.html', context)
