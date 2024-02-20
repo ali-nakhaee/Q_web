@@ -58,8 +58,33 @@ def add_question(request):
         form = AddQuestionForm(data=request.POST)
         if form.is_valid():
             form.save()
-            return redirect('quiz:index')
+            return redirect('quiz:questions')
 
     # Display a blank or invalid form.
     context = {'form': form}
     return render(request, 'quiz/add_question.html', context)
+
+
+def questions(request):
+    """ Show all questions from database. """
+    questions = Question.objects.order_by('-date_added')
+    context = {'questions': questions}
+    return render(request, 'quiz/questions.html', context)
+
+
+def edit_question(request, question_id):
+    """ Edit a single question. """
+    question = Question.objects.get(id=question_id)
+
+    if request.method != 'POST':
+        # Initial request; pre-fill form with the current question.
+        form = AddQuestionForm(instance=question)
+    else:
+        # POST data submitted; process data.
+        form = AddQuestionForm(instance=question, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('quiz:questions')
+
+    context = {'form': form, 'question': question}
+    return render(request, 'quiz/edit_question.html', context)

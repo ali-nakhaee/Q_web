@@ -1,0 +1,10 @@
+{% extends "quiz/base.html" %}
+
+{% block content %}
+    <p>Edit question:</p>
+    <form action="{% url 'quiz:edit_question' question.id %}" method='post'>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button name="submit">Save changes</button>
+    </form>
+{% endblock content %}
