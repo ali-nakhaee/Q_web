@@ -3,14 +3,9 @@ from django import forms
 from .models import Question
 
 
-class QuestionForm(forms.ModelForm):
+class QuestionForm(forms.Form):
 
-    class Meta:
-        model = Question
-        fields = ['text']
-        labels = {'text': 'question text'}
-        # widgets = {'text': forms.FloatField(attrs={'readonly': True})}
-
+    text = forms.CharField()
     user_answer = forms.FloatField()
     evaluation = forms.CharField()
 
@@ -19,4 +14,3 @@ class QuestionForm(forms.ModelForm):
         self.fields["text"].widget.attrs.update(readonly=True)
         self.fields["user_answer"].required = False
         self.fields["evaluation"].required = False
-
