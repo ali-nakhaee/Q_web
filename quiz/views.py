@@ -23,11 +23,13 @@ def quiz(request):
     if request.method != 'POST':
         # No data submitted; create a blank Quiz.
         formset = QuestionFormSet(initial=questions)
+        percent = 0
     else:
         # POST data submitted; process data.
         formset = QuestionFormSet(data=request.POST, initial=questions)
         query_dict = request.POST
         data = query_dict.copy()
+        true_answers_num = 0
         if formset.is_valid():
             for i in range(0, question_num):
                 if formset.cleaned_data[i]['user_answer']:
@@ -35,10 +37,12 @@ def quiz(request):
                     true_answer = Question.objects.get(id=i+1).true_answer
                     if float(user_answer) == true_answer:
                         data[f'form-{i}-evaluation'] = 'Your answer is True.'
+                        true_answers_num += 1
                     else:
                         data[f'form-{i}-evaluation'] = 'Your answer is False.'
                 else:
                     data[f'form-{i}-evaluation'] = "You didn't answer."
         formset = QuestionFormSet(data=data, initial=questions)
-    context = {'formset': formset}
+        percent = round((true_answers_num / question_num) * 100)
+    context = {'formset': formset, 'percent': percent}
     return render(request, 'quiz/quiz.html', context)

@@ -8,13 +8,15 @@
     {% csrf_token %}
     {{ formset.management_form.as_p }}
     {% for form in formset %}
+      {{ forloop.counter }} <br>
       {{ form.text }} <br>
       {{ form.user_answer }} <br>
       {{ form.evaluation }} <br>
-      {{ forloop.counter }} <br>
       {{ form.errors }} <br>
     {% endfor %}
   <button type="submit" >Answer</button>
   </form>
+
+  <p>{{ percent }}</p>
 
 {% endblock content %}
