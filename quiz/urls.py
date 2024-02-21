@@ -16,4 +16,6 @@ urlpatterns = [
     path('add_question/', views.add_question, name='add_question'),
     # Page for editing a single question
     path('edit_question/<int:question_id>/', views.edit_question, name='edit_question'),
+    # Page for confirm delete a single questions
+    path('delete_question/<int:question_id>/', views.delete_question, name='delete_question'),
 ]

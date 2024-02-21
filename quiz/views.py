@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.forms import formset_factory
+from django.contrib import messages
 
 from .models import Question
 from .forms import QuestionForm, AddQuestionForm
@@ -14,9 +15,12 @@ def quiz(request):
     """ Show quiz page. """
     question_num = Question.objects.all().count()
     questions = []
-    for question_id in range(1, question_num + 1):
-        question = Question.objects.get(id=question_id)
-        questions.append({'text': question.text, 'true_answer': question.true_answer, 'user_answer': ''})
+    last_question_id = Question.objects.latest('id').id
+    for question_id in range(1, last_question_id + 1):
+        if Question.objects.filter(id=question_id).exists():
+            question = Question.objects.get(id=question_id)
+            questions.append({'text': question.text, 'true_answer': question.true_answer,
+                              'user_answer': '', 'id': question.id})
 
     QuestionFormSet = formset_factory(QuestionForm, extra=0)
 
@@ -34,7 +38,7 @@ def quiz(request):
             for i in range(0, question_num):
                 if formset.cleaned_data[i]['user_answer']:
                     user_answer = formset.cleaned_data[i]['user_answer']
-                    true_answer = Question.objects.get(id=i+1).true_answer
+                    true_answer = questions[i]['true_answer']
                     if float(user_answer) == true_answer:
                         data[f'form-{i}-evaluation'] = 'Your answer is True.'
                         true_answers_num += 1
@@ -88,3 +92,18 @@ def edit_question(request, question_id):
 
     context = {'form': form, 'question': question}
     return render(request, 'quiz/edit_question.html', context)
+
+
+def delete_question(request, question_id):
+    """ Delete one question. """
+    question = Question.objects.get(id=question_id)
+
+    if request.method != 'POST':
+        # Initial request; pre-fill form with the current question.
+        context = {'question': question}
+        return render(request, 'quiz/delete_question.html', context)
+    else:
+        # POST data submitted; process data.
+        question.delete()
+        messages.success(request, 'The question has been deleted successfully.')
+        return redirect('quiz:questions')

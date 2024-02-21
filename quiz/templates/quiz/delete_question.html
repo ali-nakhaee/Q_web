@@ -1,0 +1,15 @@
+{% extends "quiz/base.html" %} 
+
+{% block content %}
+<h2>Delete question</h2>
+
+<form action="{% url 'quiz:delete_question' question.id %}" method="POST">
+  {% csrf_token %}
+  <p>Are you sure that you want to delete the question "{{ question.text }}"?</p>
+  <div>
+    <button type="submit">Yes, Delete</button>
+    <a href="{% url 'quiz:questions' %}">Cancel</a>
+  </div>
+</form>
+
+{% endblock content %}

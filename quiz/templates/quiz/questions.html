@@ -7,10 +7,13 @@
     {% for question in questions %}
       <li>{{ question.text }}
       {{ question.true_answer }}</li>
-      <a href="{% url 'quiz:edit_question' question.id %}">Edit question</a>
+      <a href="{% url 'quiz:edit_question' question.id %}">Edit question</a> -
+      <a href="{% url 'quiz:delete_question' question.id %}">Delete question</a>
     {% empty %}
       <li>No questions have been added yet.</li>
     {% endfor %}
   </ul>
+
+  <p><a href="{% url 'quiz:add_question' %}">Add question</a></p>
 
 {% endblock content %}
