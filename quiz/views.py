@@ -62,6 +62,7 @@ def add_question(request):
         form = AddQuestionForm(data=request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'The question has been added successfully.')
             return redirect('quiz:questions')
 
     # Display a blank or invalid form.
@@ -88,6 +89,7 @@ def edit_question(request, question_id):
         form = AddQuestionForm(instance=question, data=request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'The question has been edited successfully.')
             return redirect('quiz:questions')
 
     context = {'form': form, 'question': question}
