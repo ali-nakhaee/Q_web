@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.forms import formset_factory
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.http import Http404
 
 from .models import Question
 from .forms import QuestionForm, AddQuestionForm
@@ -11,6 +13,7 @@ def index(request):
     return render(request, 'quiz/index.html')
 
 
+@login_required
 def quiz(request):
     """ Show quiz page. """
     question_num = Question.objects.all().count()
@@ -52,6 +55,7 @@ def quiz(request):
     return render(request, 'quiz/quiz.html', context)
 
 
+@login_required
 def add_question(request):
     """ Add a new question to database. """
     if request.method != 'POST':
@@ -61,7 +65,9 @@ def add_question(request):
         # POST data submitted; process data.
         form = AddQuestionForm(data=request.POST)
         if form.is_valid():
-            form.save()
+            new_question = form.save(commit=False)
+            new_question.owner = request.user
+            new_question.save()
             messages.success(request, 'The question has been added successfully.')
             return redirect('quiz:questions')
 
@@ -70,16 +76,21 @@ def add_question(request):
     return render(request, 'quiz/add_question.html', context)
 
 
+@login_required
 def questions(request):
     """ Show all questions from database. """
-    questions = Question.objects.order_by('-date_added')
+    questions = Question.objects.filter(owner=request.user).order_by('-date_added')
     context = {'questions': questions}
     return render(request, 'quiz/questions.html', context)
 
 
+@login_required
 def edit_question(request, question_id):
     """ Edit a single question. """
     question = Question.objects.get(id=question_id)
+    # Make sure the topic belongs to the current user.
+    if question.owner != request.user:
+        raise Http404
 
     if request.method != 'POST':
         # Initial request; pre-fill form with the current question.
@@ -96,9 +107,13 @@ def edit_question(request, question_id):
     return render(request, 'quiz/edit_question.html', context)
 
 
+@login_required
 def delete_question(request, question_id):
     """ Delete one question. """
     question = Question.objects.get(id=question_id)
+    # Make sure the topic belongs to the current user.
+    if question.owner != request.user:
+        raise Http404
 
     if request.method != 'POST':
         # Initial request; pre-fill form with the current question.
