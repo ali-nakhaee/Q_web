@@ -23,6 +23,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 INSTALLED_APPS = [
     # My apps.
     "quiz",
+    "users",
 
     # Third party apps
     "crispy_forms",
