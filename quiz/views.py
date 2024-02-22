@@ -18,7 +18,12 @@ def quiz(request):
     """ Show quiz page. """
     question_num = Question.objects.all().count()
     questions = []
-    last_question_id = Question.objects.latest('id').id
+
+    if question_num > 0:
+        last_question_id = Question.objects.latest('id').id
+    else:
+        last_question_id = 0
+
     for question_id in range(1, last_question_id + 1):
         if Question.objects.filter(id=question_id).exists():
             question = Question.objects.get(id=question_id)
@@ -49,8 +54,13 @@ def quiz(request):
                         data[f'form-{i}-evaluation'] = 'Your answer is False.'
                 else:
                     data[f'form-{i}-evaluation'] = "You didn't answer."
+
         formset = QuestionFormSet(data=data, initial=questions)
-        percent = round((true_answers_num / question_num) * 100)
+        if question_num > 0:
+            percent = round((true_answers_num / question_num) * 100)
+        else:
+            percent = 0
+
     context = {'formset': formset, 'percent': percent}
     return render(request, 'quiz/quiz.html', context)
 
