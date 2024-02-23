@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
 
 from . import forms
@@ -17,12 +17,17 @@ def login_page(request):
             )
             if user is not None:
                 login(request, user)
-                message = f'Hello {user.username}! You have been logged in'
+                return redirect('quiz:index')
             else:
                 message = 'Login failed!'
 
     context = {'form': form, 'message': message}
     return render(request, 'registration/login.html', context)
+
+
+def logout_user(request):
+    logout(request)
+    return render(request, 'registration/logged_out.html')
 
 
 def register(request):

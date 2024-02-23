@@ -7,9 +7,10 @@ from . import views
 app_name = 'users'
 urlpatterns = [
     # Include default auth urls.
-    path('', include('django.contrib.auth.urls')),
+    # path('', include('django.contrib.auth.urls')),
     # Login page.
     path('login/', views.login_page, name='login'),
+    path('logout/', views.logout_user, name='logout'),
     # Registration page.
     path('register/', views.register, name='register'),
 ]
