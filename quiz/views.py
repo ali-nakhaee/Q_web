@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.forms import formset_factory
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
+
 from django.http import Http404
 
 from .models import Question
@@ -66,6 +67,7 @@ def quiz(request):
 
 
 @login_required
+@permission_required('quiz.add_question', raise_exception=True)
 def add_question(request):
     """ Add a new question to database. """
     if request.method != 'POST':
