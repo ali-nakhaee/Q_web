@@ -89,6 +89,7 @@ def add_question(request):
 
 
 @login_required
+@permission_required('quiz.view_question', raise_exception=True)
 def questions(request):
     """ Show all questions from database. """
     questions = Question.objects.filter(owner=request.user).order_by('-date_added')
@@ -97,6 +98,7 @@ def questions(request):
 
 
 @login_required
+@permission_required('quiz.change_question', raise_exception=True)
 def edit_question(request, question_id):
     """ Edit a single question. """
     question = Question.objects.get(id=question_id)
@@ -120,6 +122,7 @@ def edit_question(request, question_id):
 
 
 @login_required
+@permission_required('quiz.delete_question', raise_exception=True)
 def delete_question(request, question_id):
     """ Delete one question. """
     question = Question.objects.get(id=question_id)
