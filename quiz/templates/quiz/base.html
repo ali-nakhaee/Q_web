@@ -13,29 +13,30 @@
 
 <body>
     <nav class="navbar navbar-expand-md navbar-light bg-light mb-4 border">
+
     <a class="navbar-brand" href="{% url 'quiz:index'%}">Quiz web</a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" 
     data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
     aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span></button>
+    <span class="navbar-toggler-icon"></span></button>
+
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'quiz:quiz'%}">
                     Quiz</a></li>
-            </ul>
-        <ul class="navbar-nav ml-auto">
             {% if perms.quiz.view_question %}
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'quiz:questions' %}">
                     All questions</a></li>
             {% endif %}
             </ul>
+
             <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}
                   <li class="nav-item">
-                    <span class="navbar-text"}">Hello, {{ user.username }}.</span>
+                    <span class="navbar-text">Hello, {{ user.username }}.</span>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'users:logout' %}">Log out</a>
