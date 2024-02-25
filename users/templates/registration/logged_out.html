@@ -1,5 +1,11 @@
 {% extends "quiz/base.html" %}
 
-{% block content %}
-  <p>You have been logged out. Thank you for visiting!</p>
-{% endblock content %}
+{% block page_header %}
+    <div class="jumbotron">
+    <h1 class="display-3">Good bye</h1>
+
+    <p class="lead">You can log in with another account...</p>
+    <a class="btn btn-lg btn-primary" href="{% url 'users:login' %}"
+    role="button">Login &raquo;</a>
+</div>
+{% endblock page_header %}

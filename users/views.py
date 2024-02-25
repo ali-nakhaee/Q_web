@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
+from django.contrib import messages
 
 from . import forms
 
 
 def login_page(request):
     form = forms.LoginForm()
-    message = ''
     if request.method == 'POST':
         form = forms.LoginForm(request.POST)
         if form.is_valid():
@@ -18,9 +18,9 @@ def login_page(request):
                 login(request, user)
                 return redirect('quiz:index')
             else:
-                message = 'Login failed!'
+                messages.error(request, 'Login failed.')
 
-    context = {'form': form, 'message': message}
+    context = {'form': form}
     return render(request, 'registration/login.html', context)
 
 
