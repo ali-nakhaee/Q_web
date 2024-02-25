@@ -1,6 +1,11 @@
 {% extends "quiz/base.html" %}
 
-{% block content %}
-<p>Q_web</p>
-<p>Q_web helps you making quizzes.</p>
-{% endblock content %}
+{% block page_header %}
+    <div class="jumbotron">
+    <h1 class="display-3">Make your quiz.</h1>
+
+    <p class="lead">Q_web helps you making quizzes.</p>
+    <a class="btn btn-lg btn-primary" href="{% url 'users:register' %}"
+    role="button">Register &raquo;</a>
+</div>
+{% endblock page_header %}

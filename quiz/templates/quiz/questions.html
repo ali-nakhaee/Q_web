@@ -1,8 +1,10 @@
 {% extends "quiz/base.html" %}
 
-{% block content %}
-  <p>Questions:</p>
+{% block page_header %}
+  <h1>All questions</h1>
+{% endblock page_header %}
 
+{% block content %}
     {% if messages %}
     <ul class="messages">
     {% for message in messages %}
@@ -13,15 +15,15 @@
 
   <ul>
     {% for question in questions %}
-      <li>{{ question.text }}
-      {{ question.true_answer }}</li>
+      <li><h4>{{ question.text }}
+      {{ question.true_answer }}</h4></li>
       <a href="{% url 'quiz:edit_question' question.id %}">Edit question</a> -
       <a href="{% url 'quiz:delete_question' question.id %}">Delete question</a>
     {% empty %}
-      <li>No questions have been added yet.</li>
+      <li><h4>No questions have been added yet.</h4></li>
     {% endfor %}
   </ul>
 
-  <p><a href="{% url 'quiz:add_question' %}">Add question</a></p>
+  <h4><a href="{% url 'quiz:add_question' %}">Add question</a></h4>
 
 {% endblock content %}
