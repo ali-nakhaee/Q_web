@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-md navbar-light bg-light mb-4 border">
+    <nav class="navbar navbar-expand-md sticky-top navbar-light bg-light mb-4 border">
 
     <a class="navbar-brand" href="{% url 'quiz:index'%}">Quiz web</a>
 
@@ -23,8 +23,9 @@
 
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
+   
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'quiz:quiz'%}">
+                <a class="nav-link" href="{% url 'quiz:commitment'%}">
                     Quiz</a></li>
             {% if perms.quiz.view_question %}
             <li class="nav-item">

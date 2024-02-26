@@ -140,3 +140,9 @@ def delete_question(request, question_id):
         question.delete()
         messages.success(request, 'The question has been deleted successfully.')
         return redirect('quiz:questions')
+
+
+@login_required
+def commitment(request):
+    # Commitment page before start the quiz.
+    return render(request, 'quiz/commitment.html')

@@ -1,4 +1,6 @@
 {% extends "quiz/base.html" %}
+{% load bootstrap4 %}
+
 
 {% block page_header %}
   <h1>All questions</h1>
@@ -22,15 +24,26 @@
 
   <ul>
     {% for question in questions %}
-      <li><h4>{{ question.text }}
-      {{ question.true_answer }}</h4></li>
-      <a href="{% url 'quiz:edit_question' question.id %}">Edit question</a> -
-      <a href="{% url 'quiz:delete_question' question.id %}">Delete question</a>
+    <div class="card">
+      <div class="card-body">
+      <h4>{{ question.text }}
+      {{ question.true_answer }}</h4>
+      </div>
+    </div>
+      {{ buttons }}
+      <a class="btn btn-outline-primary" href="{% url 'quiz:edit_question' question.id %}"
+      role="button">Edit question</a>
+      <a class="btn btn-outline-danger" href="{% url 'quiz:delete_question' question.id %}"
+      role="button">Delete question</a>
+      {{ endbuttons }} <br>
+  
     {% empty %}
       <li><h4>No questions have been added yet.</h4></li>
     {% endfor %}
   </ul>
-
-  <h4><a href="{% url 'quiz:add_question' %}">Add question</a></h4>
+  {{ buttons }}
+      <a class="btn btn-primary" href="{% url 'quiz:add_question' %}"
+      role="button">Add question</a>
+      {{ endbuttons }} <br>
 
 {% endblock content %}

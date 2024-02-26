@@ -8,6 +8,8 @@ app_name = "quiz"
 urlpatterns = [
     # Home page
     path('', views.index, name='index'),
+    # Commitment page
+    path('commitment/', views.commitment, name='commitment'),
     # Quiz page
     path('quiz/', views.quiz, name='quiz'),
     # Page for show all questions
