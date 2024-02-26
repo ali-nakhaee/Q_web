@@ -1,20 +1,22 @@
 {% extends "quiz/base.html" %}
+{% load bootstrap4 %}
+
+{% block page_header %}
+  <h3>Quiz</h3>
+{% endblock page_header %}
 
 {% block content %}
-
-  <p>Quiz</p>
   
   <form action="{% url 'quiz:quiz' %}" method='post'>
     {% csrf_token %}
     {{ formset.management_form.as_p }}
     {% for form in formset %}
-      {{ forloop.counter }} <br>
-      {{ form.text }} <br>
-      {{ form.user_answer }} <br>
-      {{ form.evaluation }} <br>
-      {{ form.errors }} <br>
+    {{ forloop.counter }} <br>
+    {% bootstrap_form form %}
     {% endfor %}
-  <button type="submit" >Answer</button>
+    {% buttons %}
+        <button name="submit" class="btn btn-success">Answer</button>
+      {% endbuttons %}
   </form>
 
   <p>{{ percent }}</p>

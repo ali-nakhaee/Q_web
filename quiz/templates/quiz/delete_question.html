@@ -12,9 +12,10 @@
   <h5>Are you sure that you want to delete the question "{{ question.text }}"?</h5>
   <div>
     {% buttons %}
-        <button name="submit" class="btn btn-primary">Yes, Delete</button>
+        <button name="submit" class="btn btn-danger">Yes, Delete</button>
+        <a class="btn btn-secondary" href="{% url 'quiz:questions' %}"
+        role="button">Cancel</a>
     {% endbuttons %}
-    <a href="{% url 'quiz:questions' %}">Cancel</a>
   </div>
 </form>
 

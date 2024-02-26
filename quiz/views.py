@@ -52,7 +52,8 @@ def quiz(request):
                         data[f'form-{i}-evaluation'] = 'Your answer is True.'
                         true_answers_num += 1
                     else:
-                        data[f'form-{i}-evaluation'] = 'Your answer is False.'
+                        data[f'form-{i}-evaluation'] = ('Your answer is False. True answer'
+                                                        f' is {true_answer}')
                 else:
                     data[f'form-{i}-evaluation'] = "You didn't answer."
 
