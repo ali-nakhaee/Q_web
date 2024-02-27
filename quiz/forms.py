@@ -17,7 +17,6 @@ class QuestionForm(forms.Form):
 
 
 class AddQuestionForm(forms.ModelForm):
-
     class Meta:
         model = Question
         fields = ['text', 'true_answer']

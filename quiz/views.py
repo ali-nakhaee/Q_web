@@ -45,17 +45,18 @@ def quiz(request):
         true_answers_num = 0
         if formset.is_valid():
             for i in range(0, question_num):
-                if formset.cleaned_data[i]['user_answer']:
-                    user_answer = formset.cleaned_data[i]['user_answer']
-                    true_answer = questions[i]['true_answer']
-                    if float(user_answer) == true_answer:
+                true_answer = questions[i]['true_answer']
+                user_answer = formset.cleaned_data[i]['user_answer']
+                if user_answer or user_answer == 0:
+                    # The user has answered this question
+                    if user_answer == true_answer:
                         data[f'form-{i}-evaluation'] = 'Your answer is True.'
                         true_answers_num += 1
                     else:
                         data[f'form-{i}-evaluation'] = ('Your answer is False. True answer'
                                                         f' is {true_answer}')
                 else:
-                    true_answer = questions[i]['true_answer']
+                    # The user has not answered this question
                     data[f'form-{i}-evaluation'] = f"You didn't answer. True answer is {true_answer}"
 
         formset = QuestionFormSet(data=data, initial=questions)
