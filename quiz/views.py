@@ -55,7 +55,8 @@ def quiz(request):
                         data[f'form-{i}-evaluation'] = ('Your answer is False. True answer'
                                                         f' is {true_answer}')
                 else:
-                    data[f'form-{i}-evaluation'] = "You didn't answer."
+                    true_answer = questions[i]['true_answer']
+                    data[f'form-{i}-evaluation'] = f"You didn't answer. True answer is {true_answer}"
 
         formset = QuestionFormSet(data=data, initial=questions)
         if question_num > 0:
