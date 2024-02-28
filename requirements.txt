@@ -3,3 +3,4 @@ Django==4.2.10
 python-decouple==3.8
 sqlparse==0.4.4
 typing_extensions==4.9.0
+django-debug-toolbar==4.3.0

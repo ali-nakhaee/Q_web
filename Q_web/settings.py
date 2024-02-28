@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     # "crispy_forms",
     # "crispy_bootstrap4",
     'bootstrap4',
+    'debug_toolbar',
 
 
     # Default django apps.
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -135,3 +137,7 @@ MESSAGE_TAGS = {
         messages.WARNING: 'alert-warning',
         messages.ERROR: 'alert-danger',
  }
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
