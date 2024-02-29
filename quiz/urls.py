@@ -20,4 +20,6 @@ urlpatterns = [
     path('edit_question/<int:question_id>/', views.edit_question, name='edit_question'),
     # Page for confirm delete a single questions
     path('delete_question/<int:question_id>/', views.delete_question, name='delete_question'),
+    # Make quiz page
+    path('make_quiz/', views.make_quiz, name='make_quiz'),
 ]

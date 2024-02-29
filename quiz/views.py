@@ -3,7 +3,7 @@ from django.forms import formset_factory
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 
-from django.http import Http404
+from django.http import Http404, HttpResponse
 
 from .models import Question
 from .forms import QuestionForm, AddQuestionForm
@@ -149,3 +149,26 @@ def delete_question(request, question_id):
 def commitment(request):
     # Commitment page before start the quiz.
     return render(request, 'quiz/commitment.html')
+
+
+@login_required
+def make_quiz(request):
+    user_questions = Question.objects.filter(owner=request.user).order_by('-date_added')
+    questions = []
+    for question in user_questions:
+        questions.append({'text': question.text, 'true_answer': question.true_answer,
+                          'is_in_quiz': False, 'question_id': question.id})
+
+    if request.method != 'POST':
+        context = {'questions': questions}
+        return render(request, 'quiz/make_quiz.html', context)
+    else:
+        title = request.POST.get('quiz_title')
+        question_ids = []
+        for i in range(len(questions)):
+            is_in_quiz = request.POST.get(f"is_in_quiz_{i}")
+            print(is_in_quiz)
+            if is_in_quiz:
+                question_ids.append(i)
+        print(question_ids)
+        return HttpResponse(question_ids)

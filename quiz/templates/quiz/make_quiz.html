@@ -1,0 +1,28 @@
+{% extends "quiz/base.html" %}
+{% load bootstrap4 %}
+
+{% block page_header %}
+  <h1>Make Quiz</h1>
+{% endblock page_header %}
+
+{% block content %}
+
+<form action="{% url 'quiz:make_quiz' %}" method='post'>
+    {% csrf_token %}
+    <label for="quiz_title">Quiz title:</label>
+      <input type="text" id="quiz_title" name="quiz_title">
+    {% for question in questions %}
+    <h4>{{ question.text }}
+      {{ question.true_answer }}</h4>
+      <input type='checkbox' name="is_in_quiz_{{ forloop.counter0 }}"
+      value=1>Is in quiz</input>
+    {% empty %}
+      <li><h4>No questions have been added yet.</h4></li>
+    {% endfor %}
+
+    {% buttons %}
+        <button name="submit" class="btn btn-primary">Make quiz</button>
+      {% endbuttons %}
+  </form>
+
+  {% endblock content %}
