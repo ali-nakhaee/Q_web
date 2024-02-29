@@ -4,7 +4,6 @@ from .models import Question
 
 
 class QuestionForm(forms.Form):
-
     text = forms.CharField()
     user_answer = forms.FloatField()
     evaluation = forms.CharField()

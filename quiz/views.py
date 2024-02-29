@@ -41,6 +41,7 @@ def quiz(request):
         # POST data submitted; process data.
         formset = QuestionFormSet(data=request.POST, initial=questions)
         query_dict = request.POST
+        # print(query_dict)
         data = query_dict.copy()
         true_answers_num = 0
         if formset.is_valid():

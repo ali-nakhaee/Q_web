@@ -18,3 +18,19 @@ class Question(models.Model):
             return f"{self.text[:50]}..."
         else:
             return self.text
+
+
+class Quiz(models.Model):
+    designer = models.ForeignKey(User, on_delete=models.CASCADE)
+    date_created = models.DateTimeField(auto_now_add=True)
+    questions = models.ManyToManyField(Question)
+    duration = models.PositiveIntegerField()
+
+
+class QuestionAnswer(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.PROTECT)
+    quiz_id = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    user_answer = models.FloatField()
+    is_answered = models.BooleanField()
+    evaluation = models.BooleanField()
