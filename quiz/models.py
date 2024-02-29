@@ -21,6 +21,7 @@ class Question(models.Model):
 
 
 class Quiz(models.Model):
+    title = models.CharField(max_length=100)
     designer = models.ForeignKey(User, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     questions = models.ManyToManyField(Question)
