@@ -27,6 +27,10 @@
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'quiz:commitment'%}">
                     Quiz</a></li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'quiz:make_quiz' %}">
+                    Make quiz</a></li>
+
             {% if perms.quiz.view_question %}
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'quiz:questions' %}">

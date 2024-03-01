@@ -11,14 +11,19 @@
     {% csrf_token %}
     <label for="quiz_title">Quiz title:</label>
       <input type="text" id="quiz_title" name="quiz_title">
+
     {% for question in questions %}
-    <h4>{{ question.text }}
-      {{ question.true_answer }}</h4>
-      <input type='checkbox' name="is_in_quiz_{{ forloop.counter0 }}"
-      value=1>Is in quiz</input>
+    <h4><input type='checkbox' name="is_in_quiz_{{ forloop.counter0 }}"
+      value=1></input>
+      {{ question.text }}
+      {{ question.true_answer }}
+      </h4><br>
     {% empty %}
       <li><h4>No questions have been added yet.</h4></li>
     {% endfor %}
+    
+    <label for="duration">Duration (min):</label>
+      <input type="text" id="duration" name="duration">
 
     {% buttons %}
         <button name="submit" class="btn btn-primary">Make quiz</button>

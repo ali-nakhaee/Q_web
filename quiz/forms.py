@@ -20,12 +20,3 @@ class AddQuestionForm(forms.ModelForm):
         model = Question
         fields = ['text', 'true_answer']
         labels = {'text': 'text', 'true_answer': 'true answer'}
-
-
-"""class QuizForm(forms.Form):
-    question_text = forms.CharField()
-    is_in_quiz = forms.BooleanField()
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["question_text"].widget.attrs.update(readonly=True)"""

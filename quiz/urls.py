@@ -22,4 +22,6 @@ urlpatterns = [
     path('delete_question/<int:question_id>/', views.delete_question, name='delete_question'),
     # Make quiz page
     path('make_quiz/', views.make_quiz, name='make_quiz'),
+    # Show all quizzes for teacher
+    path('quizzes/', views.quizzes, name='quizzes'),
 ]

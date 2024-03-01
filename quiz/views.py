@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 
 from django.http import Http404, HttpResponse
 
-from .models import Question
+from .models import Question, Quiz
 from .forms import QuestionForm, AddQuestionForm
 
 
@@ -164,11 +164,30 @@ def make_quiz(request):
         return render(request, 'quiz/make_quiz.html', context)
     else:
         title = request.POST.get('quiz_title')
+        duration = request.POST.get('duration')
         question_ids = []
         for i in range(len(questions)):
             is_in_quiz = request.POST.get(f"is_in_quiz_{i}")
             print(is_in_quiz)
             if is_in_quiz:
-                question_ids.append(i)
-        print(question_ids)
-        return HttpResponse(question_ids)
+                question_ids.append(questions[i]['question_id'])
+        print(question_ids, title)
+
+        # make new object of Quiz model
+        new_quiz = Quiz(title=title, designer=request.user, duration=duration)
+        new_quiz.save()
+
+        quiz_questions = Question.objects.filter(id__in=question_ids)
+        for question in quiz_questions:
+            new_quiz.questions.add(question)
+
+        messages.success(request, 'The quiz has been added successfully.')
+        return redirect('quiz:quizzes')
+
+
+@login_required
+def quizzes(request):
+    """ Show all quizzes for the teacher. """
+    quizzes = Quiz.objects.filter(designer=request.user).order_by('-date_added')
+    context = {'quizzes': quizzes}
+    return render(request, 'quiz/quizzes.html', context)

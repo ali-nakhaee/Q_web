@@ -26,6 +26,11 @@ class Quiz(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     questions = models.ManyToManyField(Question)
     duration = models.PositiveIntegerField()
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        """Return a string representation of the quiz."""
+        return self.title
 
 
 class QuestionAnswer(models.Model):
