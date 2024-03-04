@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import ValidationError
 
 User = settings.AUTH_USER_MODEL
 
@@ -13,7 +14,6 @@ class Question(models.Model):
 
     def __str__(self):
         """Return a string representation of the question."""
-        # noinspection PyTypeChecker
         if len(self.text) > 50:
             return f"{self.text[:50]}..."
         else:
@@ -27,10 +27,15 @@ class Quiz(models.Model):
     questions = models.ManyToManyField(Question)
     duration = models.PositiveIntegerField()
     date_added = models.DateTimeField(auto_now_add=True)
+    # duration = models.duration
 
     def __str__(self):
         """Return a string representation of the quiz."""
         return self.title
+    
+    def clean(self):
+        if self.duration > 10:
+            raise ValidationError("Age cannot be negative.")
 
 
 class QuestionAnswer(models.Model):

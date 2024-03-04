@@ -10,7 +10,7 @@
 <form action="{% url 'quiz:make_quiz' %}" method='post'>
     {% csrf_token %}
     <label for="quiz_title">Quiz title:</label>
-      <input type="text" id="quiz_title" name="quiz_title">
+      <input type="text" id="quiz_title" name="quiz_title" required>
 
     {% for question in questions %}
     <h4><input type='checkbox' name="is_in_quiz_{{ forloop.counter0 }}"
@@ -23,7 +23,7 @@
     {% endfor %}
     
     <label for="duration">Duration (min):</label>
-      <input type="text" id="duration" name="duration">
+      <input type="number" id="duration" name="duration" required>
 
     {% buttons %}
         <button name="submit" class="btn btn-primary">Make quiz</button>
