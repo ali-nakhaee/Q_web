@@ -193,8 +193,11 @@ def quizzes(request):
     return render(request, 'quiz/quizzes.html', context)
 
 
+@login_required
 def quiz_page(request, quiz_id):
     quiz = Quiz.objects.get(id=quiz_id)
+    if quiz.designer != request.user:
+        raise Http404
     title = quiz.title
     questions = quiz.questions.values('text', 'true_answer')
     duration = quiz.duration
