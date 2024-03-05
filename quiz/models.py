@@ -32,10 +32,6 @@ class Quiz(models.Model):
     def __str__(self):
         """Return a string representation of the quiz."""
         return self.title
-    
-    def clean(self):
-        if self.duration > 10:
-            raise ValidationError("Age cannot be negative.")
 
 
 class QuestionAnswer(models.Model):

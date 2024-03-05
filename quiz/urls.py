@@ -24,4 +24,6 @@ urlpatterns = [
     path('make_quiz/', views.make_quiz, name='make_quiz'),
     # Show all quizzes for teacher
     path('quizzes/', views.quizzes, name='quizzes'),
+    # Show a single quiz to quiz designer
+    path('quiz_page/<int:quiz_id>/', views.quiz_page, name='quiz_page'),
 ]

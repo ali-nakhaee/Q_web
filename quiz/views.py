@@ -191,3 +191,12 @@ def quizzes(request):
     quizzes = Quiz.objects.filter(designer=request.user).order_by('-date_added')
     context = {'quizzes': quizzes}
     return render(request, 'quiz/quizzes.html', context)
+
+
+def quiz_page(request, quiz_id):
+    quiz = Quiz.objects.get(id=quiz_id)
+    title = quiz.title
+    questions = quiz.questions.values('text', 'true_answer')
+    duration = quiz.duration
+    context = {'title': title, 'questions': questions, 'duration': duration}
+    return render(request, 'quiz/quiz_page.html', context)

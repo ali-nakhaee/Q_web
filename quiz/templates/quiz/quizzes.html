@@ -27,7 +27,7 @@
         {% for quiz in quizzes %}
         <div class="card">
           <div class="card-body">
-          <h4>{{ quiz }}</h4>
+          <h4> <a href="{% url 'quiz:quiz_page' quiz.id %}">{{ quiz }}</a> </h4>
           </div>
         </div>
         {% empty %}
