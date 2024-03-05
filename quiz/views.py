@@ -71,6 +71,19 @@ def quiz(request):
 
 
 @login_required
+def take_quiz(request, quiz_id):
+    quiz = Quiz.objects.get(id=quiz_id)
+    if request.method != 'POST':
+        questions = []
+        for question in quiz.questions.values():
+            questions.append({'id': question['id'], 'text': question['text']})
+
+        context = {'title': quiz.title, 'quiz_id': quiz.id,
+                   'duration': quiz.duration, 'questions': questions}
+        return render(request, 'quiz/take_quiz.html', context)
+
+
+@login_required
 @permission_required('quiz.add_question', raise_exception=True)
 def add_question(request):
     """ Add a new question to database. """

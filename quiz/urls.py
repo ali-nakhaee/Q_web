@@ -26,4 +26,6 @@ urlpatterns = [
     path('quizzes/', views.quizzes, name='quizzes'),
     # Show a single quiz to quiz designer
     path('quiz_page/<int:quiz_id>/', views.quiz_page, name='quiz_page'),
+    # Quiz page
+    path('take_quiz/<int:quiz_id>/', views.take_quiz, name='take_quiz'),
 ]

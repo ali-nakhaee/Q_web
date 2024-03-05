@@ -1,0 +1,23 @@
+{% extends "quiz/base.html" %}
+{% load bootstrap4 %}
+
+{% block page_header %}
+  <h2>{{ title }}</h2>
+{% endblock page_header %}
+
+{% block content %}
+
+<form action="{% url 'quiz:take_quiz' quiz_id %}" method='post'>
+    {% csrf_token %}
+{% for question in questions %}
+    <h5>{{ question.text }} </h5>
+    <h6><input type="number" step="any" name="answer_{{ forloop.counter0 }}"></input></h6>
+{% endfor %}
+<br>
+{% buttons %}
+    <button name="submit" class="btn btn-primary">Answer</button>
+{% endbuttons %}
+</form>
+
+<h4>duration: {{ duration }} </h4>
+{% endblock content %}
