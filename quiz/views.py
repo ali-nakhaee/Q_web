@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 
 from django.http import Http404, HttpResponse
 
-from .models import Question, Quiz
+from .models import Question, Quiz, QuestionAnswer
 from .forms import QuestionForm, AddQuestionForm
 
 
@@ -73,14 +73,42 @@ def quiz(request):
 @login_required
 def take_quiz(request, quiz_id):
     quiz = Quiz.objects.get(id=quiz_id)
-    if request.method != 'POST':
-        questions = []
-        for question in quiz.questions.values():
-            questions.append({'id': question['id'], 'text': question['text']})
+    questions = []
+    for question in quiz.questions.values():
+        questions.append({'id': question['id'], 'text': question['text'],
+                          'true_answer': question['true_answer']})
 
+    if request.method != 'POST':
         context = {'title': quiz.title, 'quiz_id': quiz.id,
                    'duration': quiz.duration, 'questions': questions}
         return render(request, 'quiz/take_quiz.html', context)
+    
+    else:
+        user = request.user
+        for i in range(len(questions)):
+            user_answer = request.POST.get(f"answer_{i}")
+            question_id = questions[i]['id']
+            question = Question.objects.get(id=question_id)
+            if user_answer != '':
+                is_answered = True
+                if float(user_answer) == questions[i]['true_answer']:
+                    evaluation = True
+                else:
+                    evaluation = False
+            else:
+                user_answer = None
+                is_answered = False
+                evaluation = False
+            print('true answer type:')
+            print(type(questions[i]['true_answer']))
+            print('user answer type')
+            print(type(user_answer))
+            question_answer = QuestionAnswer.objects.create(user=user, question=question,
+                                                    user_answer=user_answer, quiz=quiz,
+                                                    is_answered=is_answered, evaluation=evaluation)
+            question_answer.save()
+
+        return HttpResponse('quiz ended!')
 
 
 @login_required

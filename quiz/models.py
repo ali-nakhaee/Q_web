@@ -36,7 +36,7 @@ class Quiz(models.Model):
 class QuestionAnswer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.PROTECT)
-    quiz_id = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-    user_answer = models.FloatField()
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    user_answer = models.FloatField(null=True)
     is_answered = models.BooleanField()
     evaluation = models.BooleanField()
