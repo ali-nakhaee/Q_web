@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 
 from django.http import Http404, HttpResponse
 
-from .models import Question, Quiz, QuestionAnswer
+from .models import Question, Quiz, QuestionAnswer, QuizAnswer
 from .forms import QuestionForm, AddQuestionForm
 
 
@@ -85,6 +85,11 @@ def take_quiz(request, quiz_id):
     
     else:
         user = request.user
+        answer_duration = 10            # need to change
+        quiz_answer = QuizAnswer.objects.create(user=user, quiz=quiz, answer_duration=answer_duration,
+                                                percent=0)
+        all_questions_num = len(questions)
+        true_answers_num = 0
         for i in range(len(questions)):
             user_answer = request.POST.get(f"answer_{i}")
             question_id = questions[i]['id']
@@ -93,6 +98,7 @@ def take_quiz(request, quiz_id):
                 is_answered = True
                 if float(user_answer) == questions[i]['true_answer']:
                     evaluation = True
+                    true_answers_num += 1
                 else:
                     evaluation = False
             else:
@@ -103,11 +109,13 @@ def take_quiz(request, quiz_id):
             print(type(questions[i]['true_answer']))
             print('user answer type')
             print(type(user_answer))
-            question_answer = QuestionAnswer.objects.create(user=user, question=question,
-                                                    user_answer=user_answer, quiz=quiz,
-                                                    is_answered=is_answered, evaluation=evaluation)
-            question_answer.save()
+            question_answer = QuestionAnswer.objects.create(question=question, user_answer=user_answer,
+                                                            quiz=quiz, is_answered=is_answered, evaluation=evaluation,
+                                                            quiz_answer=quiz_answer)
 
+        percent = (true_answers_num / all_questions_num) * 100
+        quiz_answer.percent = percent
+        quiz_answer.save()
         return HttpResponse('quiz ended!')
 
 
