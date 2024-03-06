@@ -6,7 +6,10 @@
 {% endblock page_header %}
 
 {% block content %}
-
+<div id="progressBar">
+  <div class="bar"></div>
+</div>
+<div>Quiz closes in <span id="time">0{{duration}}:00</span></div>
 <form action="{% url 'quiz:take_quiz' quiz_id %}" method='post'>
     {% csrf_token %}
 {% for question in questions %}
@@ -15,9 +18,48 @@
 {% endfor %}
 <br>
 {% buttons %}
-    <button name="submit" class="btn btn-primary">Answer</button>
+    <button name="submit" class="btn btn-primary" id="submit-btn">Answer</button>
 {% endbuttons %}
 </form>
+
+<script>
+
+    function startTimer(duration, display) {
+    var timer = duration, minutes, seconds;
+    setInterval(function () {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = minutes + ":" + seconds;
+
+        if (--timer < 0) {
+            document.getElementById('submit-btn').click();
+        }
+    }, 1000);
+}
+
+window.onload = function () {
+    var quiz_duration = 60 * {{ duration }},
+        display = document.querySelector('#time');
+    startTimer(quiz_duration, display);
+};
+
+function progress(timeleft, timetotal, $element) {
+    var progressBarWidth = timeleft * $element.width() / timetotal;
+    $element.find('div').animate({ width: progressBarWidth }, 500).html(Math.floor(timeleft/60) + ":"+ timeleft%60);
+    if(timeleft > 0) {
+        setTimeout(function() {
+            progress(timeleft - 1, timetotal, $element);
+        }, 1000);
+    }
+};
+
+progress({{ duration }} * 60, {{ duration }} * 60, $('#progressBar'));
+
+</script>
 
 <h4>duration: {{ duration }} </h4>
 {% endblock content %}
