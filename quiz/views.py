@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.shortcuts import render, redirect
 from django.forms import formset_factory
 from django.contrib import messages
@@ -72,7 +74,9 @@ def quiz(request):
 
 @login_required
 def take_quiz(request, quiz_id):
+    user = request.user
     quiz = Quiz.objects.get(id=quiz_id)
+
     questions = []
     for question in quiz.questions.values():
         questions.append({'id': question['id'], 'text': question['text'],
@@ -81,13 +85,14 @@ def take_quiz(request, quiz_id):
     if request.method != 'POST':
         context = {'title': quiz.title, 'quiz_id': quiz.id,
                    'duration': quiz.duration, 'questions': questions}
+        quiz_answer = QuizAnswer.objects.create(user=user, quiz=quiz, answer_duration=1,
+                                                percent=0)
+        print('start time:')
+        print(quiz_answer.date_started)
         return render(request, 'quiz/take_quiz.html', context)
     
     else:
-        user = request.user
-        answer_duration = 10            # need to change
-        quiz_answer = QuizAnswer.objects.create(user=user, quiz=quiz, answer_duration=answer_duration,
-                                                percent=0)
+        quiz_answer = QuizAnswer.objects.filter(quiz=quiz, user=user).order_by('-date_started')[0]
         all_questions_num = len(questions)
         true_answers_num = 0
         for i in range(len(questions)):
@@ -105,17 +110,16 @@ def take_quiz(request, quiz_id):
                 user_answer = None
                 is_answered = False
                 evaluation = False
-            print('true answer type:')
-            print(type(questions[i]['true_answer']))
-            print('user answer type')
-            print(type(user_answer))
             question_answer = QuestionAnswer.objects.create(question=question, user_answer=user_answer,
                                                             quiz=quiz, is_answered=is_answered, evaluation=evaluation,
                                                             quiz_answer=quiz_answer)
 
         percent = (true_answers_num / all_questions_num) * 100
         quiz_answer.percent = percent
+        quiz_answer.date_answered = datetime.now().astimezone()
         quiz_answer.save()
+        print('finish time:')
+        print(quiz_answer.date_answered)
         return HttpResponse('quiz ended!')
 
 

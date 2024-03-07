@@ -38,6 +38,7 @@ class QuizAnswer(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.PROTECT)
     percent = models.PositiveIntegerField(validators=[MaxValueValidator(100)])
     answer_duration = models.PositiveIntegerField()
+    date_started = models.DateTimeField(auto_now_add=True)
     date_answered = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
