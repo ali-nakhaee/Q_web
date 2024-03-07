@@ -9,7 +9,7 @@
 <div id="progressBar">
   <div class="bar"></div>
 </div>
-<div>Quiz closes in <span id="time">0{{duration}}:00</span></div>
+<!--<div>Quiz closes in <span id="time">0{{duration}}:00</span></div>-->
 <form action="{% url 'quiz:take_quiz' quiz_id %}" method='post'>
     {% csrf_token %}
 {% for question in questions %}
@@ -24,7 +24,7 @@
 
 <script>
 
-    function startTimer(duration, display) {
+    /*function startTimer(duration, display) {
     var timer = duration, minutes, seconds;
     setInterval(function () {
         minutes = parseInt(timer / 60, 10);
@@ -45,7 +45,7 @@ window.onload = function () {
     var quiz_duration = 60 * {{ duration }},
         display = document.querySelector('#time');
     startTimer(quiz_duration, display);
-};
+};*/
 
 function progress(timeleft, timetotal, $element) {
     var progressBarWidth = timeleft * $element.width() / timetotal;
@@ -54,6 +54,8 @@ function progress(timeleft, timetotal, $element) {
         setTimeout(function() {
             progress(timeleft - 1, timetotal, $element);
         }, 1000);
+    } else {
+        document.getElementById('submit-btn').click();
     }
 };
 
