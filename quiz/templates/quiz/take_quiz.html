@@ -47,20 +47,25 @@ window.onload = function () {
     startTimer(quiz_duration, display);
 };*/
 
-function progress(timeleft, timetotal, $element) {
+function progress(timeleft, timetotal, $element, startTime) {
     var progressBarWidth = timeleft * $element.width() / timetotal;
     $element.find('div').animate({ width: progressBarWidth }, 500).html(Math.floor(timeleft/60) + ":"+ timeleft%60);
+    var nowTime = Math.floor(Date.now()/1000);
+    timeleft = startTime - nowTime + timetotal;
     if(timeleft > 0) {
         setTimeout(function() {
-            progress(timeleft - 1, timetotal, $element);
+            //var nowTime = Date.now()
+            //timeleft = (startTime - nowTime) / 1000
+            progress(timeleft - 1, timetotal, $element, startTime);
         }, 1000);
     } else {
         document.getElementById('submit-btn').click();
     }
 };
 
-progress({{ duration }} * 60, {{ duration }} * 60, $('#progressBar'));
-
+var startTime = Math.floor(Date.now()/1000);
+progress({{ duration }} * 60, {{ duration }} * 60, $('#progressBar'), startTime);
+document.write(startTime);
 </script>
 
 <h4>duration: {{ duration }} </h4>
