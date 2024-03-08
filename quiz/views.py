@@ -83,10 +83,14 @@ def take_quiz(request, quiz_id):
                           'true_answer': question['true_answer']})
 
     if request.method != 'POST':
-        context = {'title': quiz.title, 'quiz_id': quiz.id,
-                   'duration': quiz.duration, 'questions': questions}
-        quiz_answer = QuizAnswer.objects.create(user=user, quiz=quiz, answer_duration=1,
-                                                percent=0)
+        # check if the user has taken the quiz in the past
+        if QuizAnswer.objects.filter(user=user, quiz=quiz):
+            return HttpResponse('You have taken this quiz in the past!')
+        else:
+            context = {'title': quiz.title, 'quiz_id': quiz.id,
+                       'duration': quiz.duration, 'questions': questions}
+            quiz_answer = QuizAnswer.objects.create(user=user, quiz=quiz, answer_duration=1,
+                                                    percent=0)
         print('start time:')
         print(quiz_answer.date_started)
         return render(request, 'quiz/take_quiz.html', context)
@@ -117,9 +121,13 @@ def take_quiz(request, quiz_id):
         percent = (true_answers_num / all_questions_num) * 100
         quiz_answer.percent = percent
         quiz_answer.date_answered = datetime.now().astimezone()
+        answer_duration = (quiz_answer.date_answered - quiz_answer.date_started).total_seconds()
+        quiz_answer.answer_duration = answer_duration
         quiz_answer.save()
         print('finish time:')
         print(quiz_answer.date_answered)
+        print('duration:')
+        print(answer_duration)
         return HttpResponse('quiz ended!')
 
 

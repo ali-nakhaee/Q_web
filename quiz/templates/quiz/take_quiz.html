@@ -54,8 +54,6 @@ function progress(timeleft, timetotal, $element, startTime) {
     timeleft = startTime - nowTime + timetotal;
     if(timeleft > 0) {
         setTimeout(function() {
-            //var nowTime = Date.now()
-            //timeleft = (startTime - nowTime) / 1000
             progress(timeleft - 1, timetotal, $element, startTime);
         }, 1000);
     } else {
