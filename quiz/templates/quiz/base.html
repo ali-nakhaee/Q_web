@@ -1,14 +1,16 @@
-{% load bootstrap4 %}
+{% load bootstrap5 %}
 
 <!doctype html> 
-<html lang="en"> 
+<html lang="fa" dir="rtl"> 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1,
       shrink-to-fit=no">
-    <title>Quiz web</title>
+      
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.rtl.min.css" integrity="sha384-gXt9imSW0VcJVHezoNQsP+TNrjYXoGcrqBZJpry9zJt8PCQjobwmhMGaDHTASo9N" crossorigin="anonymous">
+    <title>کوییز ریاضی</title>
     {% bootstrap_css %}
-    {% bootstrap_javascript jquery='full' %}
+    {% bootstrap_javascript %}
     <style>
       #progressBar {
         width: 90%;
@@ -32,7 +34,7 @@
 <body>
     <nav class="navbar navbar-expand-md sticky-top navbar-light bg-light mb-4 border">
 
-    <a class="navbar-brand" href="{% url 'quiz:index'%}">Quiz web</a>
+    <a class="navbar-brand" href="{% url 'quiz:index'%}">کوییز ریاضی</a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" 
     data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
@@ -44,35 +46,35 @@
    
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'quiz:commitment'%}">
-                    Quiz</a></li>
+                    کوییز</a></li>
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'quiz:make_quiz' %}">
-                    Make quiz</a></li>
+                    ساخت کوییز</a></li>
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'quiz:quizzes' %}">
-                    All quizzes</a></li>
+                    تمام کوییزها</a></li>
 
             {% if perms.quiz.view_question %}
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'quiz:questions' %}">
-                    All questions</a></li>
+                    تمام سوالات</a></li>
             {% endif %}
             </ul>
 
             <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}
                   <li class="nav-item">
-                    <span class="navbar-text">Hello, {{ user.username }}.</span>
+                    <span class="navbar-text">سلام, {{ user.username }}.</span>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'users:logout' %}">Log out</a>
+                    <a class="nav-link" href="{% url 'users:logout' %}">خروج</a>
                   </li>
                 {% else %}
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'users:register' %}">Register</a>
+                    <a class="nav-link" href="{% url 'users:register' %}">ایجاد حساب کاربری</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'users:login' %}">Log in</a></li>
+                    <a class="nav-link" href="{% url 'users:login' %}">ورود به حساب کاربری</a></li>
                 {% endif %}
               </ul>
             </div>
