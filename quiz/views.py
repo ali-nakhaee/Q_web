@@ -13,6 +13,7 @@ from .forms import QuestionForm, AddQuestionForm
 
 def index(request):
     """The home page for Q_web."""
+    print(request.user)
     return render(request, 'quiz/index.html')
 
 

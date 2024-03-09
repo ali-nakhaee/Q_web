@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     # "crispy_forms",
     # "crispy_bootstrap4",
     'bootstrap4',
+    'bootstrap5',
     'debug_toolbar',
 
 
