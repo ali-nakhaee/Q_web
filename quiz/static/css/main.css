@@ -1,0 +1,27 @@
+@font-face {
+    font-family: 'samim';
+    src: local('Samim'),
+         url('quiz/static/fonts/Samim.ttf') format("ttf");
+  }
+
+html * {
+    color: #c7c7c7 !important;
+    font-family: 'samim', sans-serif !important;
+  }
+
+  #progressBar {
+    width: 90%;
+    margin: 10px auto;
+    height: 22px;
+    background-color: #3579f6;
+  }
+  
+  #progressBar div {
+    height: 100%;
+    text-align: right;
+    padding: 0 10px;
+    line-height: 22px; /* same as #progressBar height if we want text middle aligned */
+    width: 0;
+    background-color: #c8c8c8;
+    box-sizing: border-box;}
+    
