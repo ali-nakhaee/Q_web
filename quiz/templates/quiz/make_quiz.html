@@ -2,7 +2,7 @@
 {% load bootstrap4 %}
 
 {% block page_header %}
-  <h1>Make Quiz</h1>
+  <h1>ساخت کوییز</h1>
 {% endblock page_header %}
 
 {% block content %}
@@ -10,7 +10,7 @@
 
 <form action="{% url 'quiz:make_quiz' %}" method='post'>
     {% csrf_token %}
-    <label for="quiz_title">Quiz title:</label>
+    <label for="quiz_title">عنوان کوییز:</label>
       <input type="text" id="quiz_title" name="quiz_title" required>
 
     {% for question in questions %}
@@ -20,14 +20,14 @@
       {{ question.true_answer }}
       </h4><br>
     {% empty %}
-      <li><h4>No questions have been added yet.</h4></li>
+      <li><h4>شما هیچ سوالی اضافه نکرده‌اید.</h4></li>
     {% endfor %}
     
-    <label for="duration">Duration (min):</label>
+    <label for="duration">مدت زمان (دقیقه):</label>
       <input type="number" id="duration" name="duration" required min="1" max="180">
 
     {% buttons %}
-        <button name="submit" class="btn btn-primary">Make quiz</button>
+        <button name="submit" class="btn btn-primary">ساخت کوییز</button>
       {% endbuttons %}
   </form>
 
