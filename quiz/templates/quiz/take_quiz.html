@@ -6,6 +6,8 @@
 {% endblock page_header %}
 
 {% block content %}
+<h5>مدت کوییز: {{ duration }} دقیقه</h5>
+<p>زمان باقی‌مانده:</p>
 <div id="progressBar">
   <div class="bar"></div>
 </div>
@@ -26,7 +28,7 @@
 {% endfor %}
 <br>
 {% buttons %}
-    <button name="submit" class="btn btn-primary" id="submit-btn">Answer</button>
+    <button name="submit" class="btn btn-primary" id="submit-btn">ارسال پاسخ</button>
 {% endbuttons %}
 </form>
 
@@ -52,7 +54,4 @@ progress({{ duration }} * 60, {{ duration }} * 60, $('#progressBar'), startTime)
 document.write(startTime);
 </script>
 
-
-
-<h4>مدت زمان (دقیقه): {{ duration }} </h4>
 {% endblock content %}
