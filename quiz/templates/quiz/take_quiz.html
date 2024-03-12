@@ -22,6 +22,8 @@
 {% endbuttons %}
 </form>
 
+
+
 <script>
 function progress(timeleft, timetotal, $element, startTime) {
     var progressBarWidth = timeleft * $element.width() / timetotal;
@@ -42,5 +44,7 @@ progress({{ duration }} * 60, {{ duration }} * 60, $('#progressBar'), startTime)
 document.write(startTime);
 </script>
 
-<h4>مدت زمان: {{ duration }} </h4>
+
+
+<h4>مدت زمان (دقیقه): {{ duration }} </h4>
 {% endblock content %}

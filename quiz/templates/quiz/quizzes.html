@@ -1,9 +1,9 @@
 {% extends "quiz/base.html" %}
-{% load bootstrap4 %}
+{% load bootstrap5 %}
 
 
 {% block page_header %}
-  <h1>All quizzes:</h1>
+  <h1>تمام کوییزها:</h1>
 {% endblock page_header %}
 
 {% block content %}
@@ -12,8 +12,8 @@
     <ul class="messages">
       {% for message in messages %}
       <div class="container-fluid p-0">
-        <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert" >
+          <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
             <span aria-hidden="True">&times;</span>
           </button>
           {{ message }}

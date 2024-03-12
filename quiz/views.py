@@ -85,13 +85,13 @@ def take_quiz(request, quiz_id):
 
     if request.method != 'POST':
         # check if the user has taken the quiz in the past
-        if QuizAnswer.objects.filter(user=user, quiz=quiz):
+        """if QuizAnswer.objects.filter(user=user, quiz=quiz):
             return HttpResponse('You have taken this quiz in the past!')
-        else:
-            context = {'title': quiz.title, 'quiz_id': quiz.id,
-                       'duration': quiz.duration, 'questions': questions}
-            quiz_answer = QuizAnswer.objects.create(user=user, quiz=quiz, answer_duration=1,
-                                                    percent=0)
+        else:"""
+        context = {'title': quiz.title, 'quiz_id': quiz.id,
+                   'duration': quiz.duration, 'questions': questions}
+        quiz_answer = QuizAnswer.objects.create(user=user, quiz=quiz, answer_duration=1,
+                                                percent=0)
         print('start time:')
         print(quiz_answer.date_started)
         return render(request, 'quiz/take_quiz.html', context)
@@ -243,7 +243,7 @@ def make_quiz(request):
         for question in quiz_questions:
             new_quiz.questions.add(question)
 
-        messages.success(request, 'The quiz has been added successfully.')
+        messages.success(request, 'کوییز با موفقیت ایجاد شد.')
         return redirect('quiz:quizzes')
 
 

@@ -1,12 +1,12 @@
 {% extends "quiz/base.html" %}
-{% load bootstrap4 %}
+{% load bootstrap5 %}
 
 {% block page_header %}
-  <h1>Quiz</h1>
+  <h1>کوییز</h1>
 {% endblock page_header %}
 
 {% block content %}
-<h4>title: {{ title }} </h4>
+<h4>عنوان: {{ title }} </h4>
 
 {% for question in questions %}
 <h5>{{ question.text }}
@@ -14,5 +14,5 @@
 </h5>
 {% endfor %}
 
-<h4>duration: {{ duration }} </h4>
+<h4>مدت زمان (دقیقه): {{ duration }} </h4>
 {% endblock content %}
