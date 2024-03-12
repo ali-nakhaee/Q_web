@@ -79,7 +79,8 @@ def take_quiz(request, quiz_id):
     quiz = Quiz.objects.get(id=quiz_id)
 
     questions = []
-    for question in quiz.questions.values():
+    questions_values = quiz.questions.values()
+    for question in questions_values:
         questions.append({'id': question['id'], 'text': question['text'],
                           'true_answer': question['true_answer']})
 
