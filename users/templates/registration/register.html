@@ -2,8 +2,11 @@
 {% load bootstrap5 %}
 
 {% block page_header %}
+<div class="mx-auto text-center">
   <h1>ایجاد حساب کاربری</h1>
+</div>
 {% endblock page_header %}
+
 
 {% block content %}
 
@@ -22,12 +25,43 @@
 </ul>
 {% endif %}
 
-<form method="post" action="{% url 'users:register' %}" class="form">
+<form method="post" action="{% url 'users:register' %}" class="row g-3">
     {% csrf_token %}
-    {% bootstrap_form form %}
+    <div class="col-md-4 mx-auto">
+      <label class="form-label" for="id_username">{{ form.username.label }}</label>
+      <input type="text" name="username" maxlength="150" autocapitalize="none"
+      autocomplete="username" autofocus="" class="form-control" placeholder=""
+      title="{{ form.username.help_text }}" required="" id="id_username">
+        <small class="form-text text-muted">{{ form.username.help_text }}</small>
+    </div><hr>
+    <div class="col-md-4 mx-auto">
+      <label class="form-label" for="id_password1">{{ form.password1.label }}</label>
+      <input type="password" name="password1" autocomplete="new-password" class="form-control"
+      placeholder="" title={{ form.password1.help_text }} required="" id="id_password1">
+      <small class="form-text text-muted">{{ form.password1.help_text|linebreaks }}</small>
+    </div>
+    <div class="col-md-4 mx-auto">
+      <label class="form-label" for="id_password2">{{ form.password2.label }}</label>
+      <input type="password" name="password2" autocomplete="new-password" class="form-control"
+      placeholder="" title={{ form.password2.help_text }} required="" id="id_password2">
+      <small class="form-text text-muted">{{ form.password2.help_text|linebreaks }}</small>
+    </div><hr>
+    <div class="col-md-4 mx-auto">
+      <label class="form-label" for="id_first_name">{{ form.first_name.label }}</label>
+      <input type="text" name="first_name" maxlength="150" class="form-control"
+      placeholder="" title="{{ form.first_name.help_text }}" required="" id="id_first_name">
+      <small class="form-text text-muted">{{ form.first_name.help_text }}</small>
+    </div>
+    <div class="col-md-4 mx-auto">
+      <label class="form-label" for="id_last_name">{{ form.last_name.label }}</label>
+      <input type="text" name="last_name" maxlength="150" class="form-control"
+      placeholder="" title={{ form.last_name.help_text }} required="" id="id_last_name">
+      <small class="form-text text-muted">{{ form.last_name.help_text }}</small>
+  </div>
+
     {% buttons %}
-         <button name="submit" class="btn btn-primary">ایجاد حساب</button>
+         <button name="submit" class="btn btn-primary mx-auto">ایجاد حساب</button>
       {% endbuttons %}
-<input type="hidden" name="next" value="{% url 'quiz:index' %}" /> </form>
+    <input type="hidden" name="next" value="{% url 'quiz:index' %}" /></form>
 
 {% endblock content %}
