@@ -28,9 +28,9 @@ class User(AbstractUser):
     )
 
     first_name = models.CharField(max_length=150,
-                                  help_text="از نام اصلی خود استفاده کنید.")
+                                  help_text="از نام واقعی خود استفاده کنید.")
     last_name = models.CharField(max_length=150,
-                                 help_text="از نام خانوادگی اصلی خود استفاده کنید.")
+                                 help_text="از نام خانوادگی واقعی خود استفاده کنید.")
     role = models.CharField(max_length=30, choices=ROLE_CHOICES, default=STUDENT)
 
     def save(self, *args, **kwargs):
