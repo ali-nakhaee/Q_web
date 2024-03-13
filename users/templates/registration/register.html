@@ -1,8 +1,8 @@
 {% extends "quiz/base.html" %}
-{% load bootstrap4 %}
+{% load bootstrap5 %}
 
 {% block page_header %}
-  <h1>Register</h1>
+  <h1>ایجاد حساب کاربری</h1>
 {% endblock page_header %}
 
 {% block content %}
@@ -12,7 +12,7 @@
   {% for message in messages %}
   <div class="container-fluid p-0">
     <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
         <span aria-hidden="True">&times;</span>
       </button>
       {{ message }}
@@ -26,7 +26,7 @@
     {% csrf_token %}
     {% bootstrap_form form %}
     {% buttons %}
-         <button name="submit" class="btn btn-primary">Register</button>
+         <button name="submit" class="btn btn-primary">ایجاد حساب</button>
       {% endbuttons %}
 <input type="hidden" name="next" value="{% url 'quiz:index' %}" /> </form>
 

@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
+from django.utils.translation import gettext_lazy as _
 
 
 class LoginForm(forms.Form):
@@ -9,6 +10,23 @@ class LoginForm(forms.Form):
 
 
 class SignupForm(UserCreationForm):
+    password1 = forms.CharField(
+        label=_("رمز عبور"),
+        strip=False,
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+        help_text=_("رمز عبور نمی‌تواند مشابه دیگر اطلاعات کاربری شما باشد." '<br>'
+                    "رمز عبور باید حداقل ۸ کاراکتر داشته باشد." '<br>'
+                    "رمز عبور نمی‌تواند از رمزهای رایج باشد." '<br>'
+                    "رمز عبور نمی‌تواند تماما عدد باشد."),
+    )
+    password2 = forms.CharField(
+        label=_("ورود مجدد رمز عبور"),
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+        strip=False,
+        help_text=_("برای تایید رمز عبور مجددا آن را وارد کنید."),
+    )
+
     class Meta(UserCreationForm.Meta):
         model = get_user_model()
-        fields = ('username', 'role')
+        fields = ('username', 'first_name', 'last_name')
+        labels = {'username': 'نام کاربری', 'first_name': 'نام', 'last_name': 'نام خانوادگی'}

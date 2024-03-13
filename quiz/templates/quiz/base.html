@@ -52,7 +52,7 @@
           <ul class="navbar-nav me-auto ms-1">
               {% if user.is_authenticated %}
                 <li class="nav-item my-auto">
-                  <span class="navbar-text">سلام, {{ user.username }}.</span>
+                  <span class="navbar-text">سلام {{ user.first_name }}.</span>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'users:logout' %}">خروج</a>
