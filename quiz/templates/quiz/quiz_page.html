@@ -6,13 +6,45 @@
 {% endblock page_header %}
 
 {% block content %}
-<h4>عنوان: {{ title }} </h4>
+<form action="{% url 'quiz:quiz_page' quiz_id %}" method='post' class="row g-3">
+  {% csrf_token %}
+  <div class='col-md-4'>
+    <label for="quiz_title" class="form-label">عنوان کوییز:</label>
+      <input type="text" class="form-control" id="quiz_title" name="quiz_title"
+      value={{ title }} required>
+  </div>
+  <div class='col-md-4'>
+    <label for="duration" class="form-label">مدت زمان (دقیقه):</label>
+    <input type="number" class="form-control" id="duration" name="duration"
+    value={{duration}} required min="1" max="180">
+  </div>
+  <div class="col-md-2">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="is_published"
+      name="is_published" {% if is_published %} checked {% endif %}>
+      <label class="form-check-label" for="is_published">
+        کوییز منتشر شود
+      </label>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="answer_published"
+      name="answer_published" {% if answer_published %} checked {% endif %}>
+      <label class="form-check-label" for="answer_published">
+        پاسخ منتشر شود
+      </label>
+    </div>
+  </div>
+  {% buttons %}
+    <button name="submit" class="btn btn-primary">ذخیره</button>
+  {% endbuttons %}
+</form>
 
 {% for question in questions %}
-<h5>{{ question.text }}
+<h6>{{ question.text }}
     {{ question.true_answer }}
-</h5>
+</h6>
 {% endfor %}
 
-<h4>مدت زمان (دقیقه): {{ duration }} </h4>
 {% endblock content %}

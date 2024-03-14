@@ -229,6 +229,7 @@ def make_quiz(request):
         title = request.POST.get('quiz_title')
         duration = request.POST.get('duration')
         is_published = request.POST.get('is_published')
+        print(is_published)
         if is_published:
             is_published = True
         else:
@@ -267,8 +268,34 @@ def quiz_page(request, quiz_id):
     quiz = Quiz.objects.get(id=quiz_id)
     if quiz.designer != request.user:
         raise Http404
-    title = quiz.title
-    questions = quiz.questions.values('text', 'true_answer')
-    duration = quiz.duration
-    context = {'title': title, 'questions': questions, 'duration': duration}
-    return render(request, 'quiz/quiz_page.html', context)
+    if request.method != "POST":
+        title = quiz.title
+        questions = quiz.questions.values('text', 'true_answer')
+        duration = quiz.duration
+        is_published = quiz.is_published
+        answer_published = quiz.answer_published
+        context = {'title': title, 'questions': questions, 'duration': duration,
+                   'is_published': is_published, 'answer_published': answer_published,
+                   'quiz_id': quiz.id}
+        return render(request, 'quiz/quiz_page.html', context)
+
+    else:
+        title = request.POST.get('quiz_title')
+        duration = request.POST.get('duration')
+        is_published = request.POST.get('is_published')
+        if is_published:
+            is_published = True
+        else:
+            is_published = False
+        answer_published = request.POST.get('answer_published')
+        if answer_published:
+            answer_published = True
+        else:
+            answer_published = False
+        quiz.title = title
+        quiz.duration = duration
+        quiz.is_published = is_published
+        quiz.answer_published = answer_published
+        quiz.save()
+        messages.success(request, 'کوییز با موفقیت اصلاح شد.')
+        return redirect('quiz:quizzes')
