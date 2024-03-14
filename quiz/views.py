@@ -83,54 +83,62 @@ def take_quiz(request, quiz_id):
     for question in questions_values:
         questions.append({'id': question['id'], 'text': question['text'],
                           'true_answer': question['true_answer']})
-
-    if request.method != 'POST':
+    if request.method == "GET":
         # check if the user has taken the quiz in the past
-        """if QuizAnswer.objects.filter(user=user, quiz=quiz):
+        if len(QuizAnswer.objects.filter(user=user, quiz=quiz)) != 1:
             return HttpResponse('You have taken this quiz in the past!')
-        else:"""
-        context = {'title': quiz.title, 'quiz_id': quiz.id,
-                   'duration': quiz.duration, 'questions': questions}
-        quiz_answer = QuizAnswer.objects.create(user=user, quiz=quiz, answer_duration=1,
-                                                percent=0)
-        print('start time:')
-        print(quiz_answer.date_started)
-        return render(request, 'quiz/take_quiz.html', context)
-    
-    else:
-        quiz_answer = QuizAnswer.objects.filter(quiz=quiz, user=user).order_by('-date_started')[0]
-        all_questions_num = len(questions)
-        true_answers_num = 0
-        for i in range(len(questions)):
-            user_answer = request.POST.get(f"answer_{i}")
-            question_id = questions[i]['id']
-            question = Question.objects.get(id=question_id)
-            if user_answer != '':
-                is_answered = True
-                if float(user_answer) == questions[i]['true_answer']:
-                    evaluation = True
-                    true_answers_num += 1
-                else:
-                    evaluation = False
+        else:
+            if QuizAnswer.objects.get(user=user, quiz=quiz).answer_duration != 1:
+                return HttpResponse('You have taken this quiz in the past!')
             else:
-                user_answer = None
-                is_answered = False
-                evaluation = False
-            question_answer = QuestionAnswer.objects.create(question=question, user_answer=user_answer,
-                                                            quiz=quiz, is_answered=is_answered, evaluation=evaluation,
-                                                            quiz_answer=quiz_answer)
+                context = {'title': quiz.title, 'quiz_id': quiz.id,
+                           'duration': quiz.duration, 'questions': questions}
+                return render(request, 'quiz/take_quiz.html', context)
+    
+    elif request.method == "POST":
+        quiz_answer = QuizAnswer.objects.filter(quiz=quiz, user=user).order_by('-date_started')[0]
+        if quiz_answer.answer_duration != 1:
+            return HttpResponse('You have taken this quiz in the past!')
+        quiz_duration = quiz_answer.quiz.duration * 60
+        submit_time = datetime.now().astimezone()
+        if (submit_time - quiz_answer.date_started).total_seconds() > (quiz_duration + 10):
+            return HttpResponse('Your answer is out of duration!')
+        else:
+            all_questions_num = len(questions)
+            true_answers_num = 0
+            for i in range(len(questions)):
+                user_answer = request.POST.get(f"answer_{i}")
+                question_id = questions[i]['id']
+                question = Question.objects.get(id=question_id)
+                if user_answer != '':
+                    is_answered = True
+                    if float(user_answer) == questions[i]['true_answer']:
+                        evaluation = True
+                        true_answers_num += 1
+                    else:
+                        evaluation = False
+                else:
+                    user_answer = None
+                    is_answered = False
+                    evaluation = False
+                question_answer = QuestionAnswer.objects.create(question=question, user_answer=user_answer,
+                                                                quiz=quiz, is_answered=is_answered,
+                                                                evaluation=evaluation, quiz_answer=quiz_answer)
 
-        percent = (true_answers_num / all_questions_num) * 100
-        quiz_answer.percent = percent
-        quiz_answer.date_answered = datetime.now().astimezone()
-        answer_duration = (quiz_answer.date_answered - quiz_answer.date_started).total_seconds()
-        quiz_answer.answer_duration = answer_duration
-        quiz_answer.save()
-        print('finish time:')
-        print(quiz_answer.date_answered)
-        print('duration:')
-        print(answer_duration)
-        return HttpResponse('quiz ended!')
+            percent = (true_answers_num / all_questions_num) * 100
+            quiz_answer.percent = percent
+            quiz_answer.date_answered = datetime.now().astimezone()
+            answer_duration = (quiz_answer.date_answered - quiz_answer.date_started).total_seconds()
+            quiz_answer.answer_duration = answer_duration
+            quiz_answer.save()
+            print('finish time:')
+            print(quiz_answer.date_answered)
+            print('duration:')
+            print(answer_duration)
+            return HttpResponse('quiz ended!')
+
+    else:
+        return HttpResponse('method not allowed!')
 
 
 @login_required
@@ -209,9 +217,19 @@ def delete_question(request, question_id):
 
 
 @login_required
-def commitment(request):
+def commitment(request, quiz_id):
     # Commitment page before start the quiz.
-    return render(request, 'quiz/commitment.html')
+    if request.method == "GET":
+        return render(request, 'quiz/commitment.html', {'quiz_id': quiz_id})
+    elif request.method == "POST":
+        user = request.user
+        quiz = Quiz.objects.get(id=quiz_id)
+        quiz_answer = QuizAnswer.objects.create(user=user, quiz=quiz, answer_duration=1,
+                                                percent=0)
+        print('quiz started')
+        return redirect("quiz:take_quiz", quiz_id=quiz_id)
+    else:
+        return HttpResponse("method not allowed")
 
 
 @login_required
@@ -269,13 +287,9 @@ def quiz_page(request, quiz_id):
     if quiz.designer != request.user:
         raise Http404
     if request.method != "POST":
-        title = quiz.title
         questions = quiz.questions.values('text', 'true_answer')
-        duration = quiz.duration
-        is_published = quiz.is_published
-        answer_published = quiz.answer_published
-        context = {'title': title, 'questions': questions, 'duration': duration,
-                   'is_published': is_published, 'answer_published': answer_published,
+        context = {'title': quiz.title, 'questions': questions, 'duration': quiz.duration,
+                   'is_published': quiz.is_published, 'answer_published': quiz.answer_published,
                    'quiz_id': quiz.id}
         return render(request, 'quiz/quiz_page.html', context)
 
@@ -299,3 +313,16 @@ def quiz_page(request, quiz_id):
         quiz.save()
         messages.success(request, 'کوییز با موفقیت اصلاح شد.')
         return redirect('quiz:quizzes')
+
+
+@login_required
+def my_panel(request):
+    user = request.user
+    published_quizzes_ids = Quiz.objects.filter(is_published=True).values_list('id', flat=True)
+    user_quizanswer_ids = QuizAnswer.objects.filter(user=user).values_list('quiz__id', flat=True)
+    not_answered_quiz_ids = []
+    for quiz_id in published_quizzes_ids:
+        if quiz_id not in user_quizanswer_ids:
+            not_answered_quiz_ids.append(quiz_id)
+    print(published_quizzes_ids, user_quizanswer_ids, not_answered_quiz_ids)
+    return HttpResponse('hi')

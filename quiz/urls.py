@@ -9,7 +9,7 @@ urlpatterns = [
     # Home page
     path('', views.index, name='index'),
     # Commitment page
-    path('commitment/', views.commitment, name='commitment'),
+    path('commitment/<int:quiz_id>/', views.commitment, name='commitment'),
     # Quiz page
     path('quiz/', views.quiz, name='quiz'),
     # Page for show all questions
@@ -28,4 +28,6 @@ urlpatterns = [
     path('quiz_page/<int:quiz_id>/', views.quiz_page, name='quiz_page'),
     # Quiz page
     path('take_quiz/<int:quiz_id>/', views.take_quiz, name='take_quiz'),
+    # my_panel for student
+    path('my_panel/', views.my_panel, name='my_panel'),
 ]

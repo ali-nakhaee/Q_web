@@ -23,5 +23,5 @@ class QuizAnswerInline(admin.TabularInline):
 
 @admin.register(Quiz)
 class QuizAdmin(admin.ModelAdmin):
-    list_display = ['id', 'designer', 'duration']
+    list_display = ['id', 'designer', 'title', 'duration']
     inlines = [QuizAnswerInline]

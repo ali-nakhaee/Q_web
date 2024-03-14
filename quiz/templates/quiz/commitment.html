@@ -31,8 +31,9 @@
   
         <!-- Modal footer -->
         <div class="modal-footer">
-            <a class="btn btn-primary" href="{% url 'quiz:quiz' %}"
-                role="button">پذیرش</a>
+          <form action="{% url 'quiz:commitment' quiz_id %}" method='post'>
+            {% csrf_token %}
+            <button class="btn btn-primary" name="submit" role="button">پذیرش</button></form>
           <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">عدم پذیرش</button>
         </div>
   
