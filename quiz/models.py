@@ -25,6 +25,8 @@ class Quiz(models.Model):
     questions = models.ManyToManyField(Question)
     duration = models.PositiveIntegerField()
     date_added = models.DateTimeField(auto_now_add=True)
+    is_published = models.BooleanField()
+    answer_published = models.BooleanField()
 
     def __str__(self):
         return self.title

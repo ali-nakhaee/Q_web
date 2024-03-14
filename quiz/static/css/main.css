@@ -20,6 +20,6 @@ html * {
     padding: 0 10px;
     line-height: 22px; /* same as #progressBar height if we want text middle aligned */
     width: 0;
-    background-color: #c8c8c8;
+    background-color: #d4d4d4;
     box-sizing: border-box;}
     

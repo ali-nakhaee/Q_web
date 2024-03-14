@@ -228,6 +228,11 @@ def make_quiz(request):
     else:
         title = request.POST.get('quiz_title')
         duration = request.POST.get('duration')
+        is_published = request.POST.get('is_published')
+        if is_published:
+            is_published = True
+        else:
+            is_published = False
         question_ids = []
         for i in range(len(questions)):
             is_in_quiz = request.POST.get(f"is_in_quiz_{i}")
@@ -237,7 +242,8 @@ def make_quiz(request):
         print(question_ids, title)
 
         # make new object of Quiz model
-        new_quiz = Quiz(title=title, designer=request.user, duration=duration)
+        new_quiz = Quiz(title=title, designer=request.user, duration=duration,
+                        is_published=is_published, answer_published=False)
         new_quiz.save()
 
         quiz_questions = Question.objects.filter(id__in=question_ids)
