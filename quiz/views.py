@@ -135,7 +135,7 @@ def take_quiz(request, quiz_id):
             print(quiz_answer.date_answered)
             print('duration:')
             print(answer_duration)
-            return HttpResponse('quiz ended!')
+            return redirect("quiz:my_panel")
 
     else:
         return HttpResponse('method not allowed!')
@@ -288,7 +288,7 @@ def quiz_page(request, quiz_id):
         raise Http404
     if request.method != "POST":
         questions = quiz.questions.values('text', 'true_answer')
-        context = {'title': quiz.title, 'questions': questions, 'duration': quiz.duration,
+        context = {'quiz_title': quiz.title, 'questions': questions, 'duration': quiz.duration,
                    'is_published': quiz.is_published, 'answer_published': quiz.answer_published,
                    'quiz_id': quiz.id}
         return render(request, 'quiz/quiz_page.html', context)
@@ -324,5 +324,9 @@ def my_panel(request):
     for quiz_id in published_quizzes_ids:
         if quiz_id not in user_quizanswer_ids:
             not_answered_quiz_ids.append(quiz_id)
-    print(published_quizzes_ids, user_quizanswer_ids, not_answered_quiz_ids)
-    return HttpResponse('hi')
+    # print(published_quizzes_ids, user_quizanswer_ids, not_answered_quiz_ids)
+    # return HttpResponse('hi')
+    not_answered_quizzes = Quiz.objects.filter(id__in=not_answered_quiz_ids)
+    answered_quizzes = QuizAnswer.objects.filter(user=user).order_by('-date_answered')
+    context = {'not_answered_quizzes': not_answered_quizzes, 'answered_quizzes': answered_quizzes}
+    return render(request, 'quiz/my_panel.html', context)
