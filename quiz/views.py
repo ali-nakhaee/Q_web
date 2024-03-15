@@ -125,7 +125,10 @@ def take_quiz(request, quiz_id):
                                                                 quiz=quiz, is_answered=is_answered,
                                                                 evaluation=evaluation, quiz_answer=quiz_answer)
 
-            percent = (true_answers_num / all_questions_num) * 100
+            if all_questions_num == 0:
+                percent = 0
+            else:
+                percent = (true_answers_num / all_questions_num) * 100
             quiz_answer.percent = percent
             quiz_answer.date_answered = datetime.now().astimezone()
             answer_duration = (quiz_answer.date_answered - quiz_answer.date_started).total_seconds()
@@ -330,3 +333,25 @@ def my_panel(request):
     answered_quizzes = QuizAnswer.objects.filter(user=user).order_by('-date_answered')
     context = {'not_answered_quizzes': not_answered_quizzes, 'answered_quizzes': answered_quizzes}
     return render(request, 'quiz/my_panel.html', context)
+
+
+@login_required
+def quiz_answer_result(request, quiz_answer_id):
+    quiz_answer = QuizAnswer.objects.get(id=quiz_answer_id)
+    if request.user != quiz_answer.user:
+        return HttpResponse("This isn't your quiz.")
+    result_text = ""
+    questions = []
+    if quiz_answer.quiz.answer_published:
+        quiz_questions = QuestionAnswer.objects.filter(quiz_answer=quiz_answer)
+        for question in quiz_questions:
+            questions.append({'question_text': question.question.text, 'user_answer': question.user_answer,
+                              'true_answer': question.question.true_answer})
+        print(questions)
+        result_text = f"درصد پاسخ‌گویی شما در این کوییز: {quiz_answer.percent}"
+    else:
+        result_text = "نتیجه‌ی این کوییز هنوز منتشر نشده است."
+    
+    context = {'result_text': result_text, 'questions': questions,
+               'quiz_title': quiz_answer.quiz.title}
+    return render(request, 'quiz/quiz_answer_result.html', context)

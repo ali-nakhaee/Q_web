@@ -30,4 +30,6 @@ urlpatterns = [
     path('take_quiz/<int:quiz_id>/', views.take_quiz, name='take_quiz'),
     # my_panel for student
     path('my_panel/', views.my_panel, name='my_panel'),
+    # page for quiz_answer result
+    path('quiz_answer_result/<int:quiz_answer_id>/', views.quiz_answer_result, name='quiz_answer_result'),
 ]

@@ -38,7 +38,7 @@
     </div>
     <div class="card-body text-center">
       <h5 class="card-title">{{ quizanswer.quiz.title }}</h5>
-      <a href="{% url 'quiz:commitment' quizanswer.id %}" class="btn btn-primary">مشاهده نتیجه</a>
+      <a href="{% url 'quiz:quiz_answer_result' quizanswer.id %}" class="btn btn-primary">مشاهده نتیجه</a>
     </div>
   </div>
 </div>
