@@ -19,7 +19,7 @@
     
 </head>
 
-<body>
+<body class="d-flex flex-column vh-100">
     <nav class="navbar navbar-expand-md sticky-top navbar-light bg-light mb-4 border">
 
     <a class="navbar-brand" href="{% url 'quiz:index'%}">کوییز ریاضی</a>
@@ -76,5 +76,13 @@
             {% block content %}{% endblock content %}
                 </div>
             </main>
+
+          <footer class="mt-auto">
+          <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+            Copyright: ©1403 
+            <a class="text-dark" href="https://math-quiz.ir/">Math-Quiz.ir</a>
+            Ali Nakhaee
+          </div>
+          </footer>
     </body>
 </html>
