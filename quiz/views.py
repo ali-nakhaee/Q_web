@@ -223,7 +223,11 @@ def delete_question(request, question_id):
 def commitment(request, quiz_id):
     # Commitment page before start the quiz.
     if request.method == "GET":
-        return render(request, 'quiz/commitment.html', {'quiz_id': quiz_id})
+        quiz = Quiz.objects.get(id=quiz_id)
+        context = {'quiz_id': quiz_id, 'quiz_duration': quiz.duration,
+                   'question_count': quiz.questions.count(),
+                   'quiz_title': quiz.title}
+        return render(request, 'quiz/commitment.html', context)
     elif request.method == "POST":
         user = request.user
         quiz = Quiz.objects.get(id=quiz_id)
@@ -291,9 +295,10 @@ def quiz_page(request, quiz_id):
         raise Http404
     if request.method != "POST":
         questions = quiz.questions.values('text', 'true_answer')
+        quiz_answers = QuizAnswer.objects.filter(quiz=quiz).order_by('-date_answered')
         context = {'quiz_title': quiz.title, 'questions': questions, 'duration': quiz.duration,
                    'is_published': quiz.is_published, 'answer_published': quiz.answer_published,
-                   'quiz_id': quiz.id}
+                   'quiz_id': quiz.id, 'quiz_answers': quiz_answers}
         return render(request, 'quiz/quiz_page.html', context)
 
     else:

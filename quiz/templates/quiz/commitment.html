@@ -2,11 +2,17 @@
 {% load bootstrap5 %}
 
 {% block page_header %}
-  <h3>تعهدنامه</h3>
+  <h3>اطلاعات کوییز</h3>
 {% endblock page_header %}
 
 {% block content %}
-<h6>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores obcaecati eligendi, adipisci accusamus deserunt, exercitationem laboriosam voluptas non hic eos ipsam autem est quaerat repudiandae dolor sit odio, fugiat iure!</h6>
+<h5>{{ quiz_title }}</h5>
+<li><h6>این کوییز {{ question_count }} سوال دارد.</h6></li>
+<li><h6>مدت زمان شما برای پاسخ‌گویی {{ quiz_duration }} دقیقه است.</h6></li>
+<li><h6>پس از شروع کوییز امکان خروج و شرکت دوباره در این کوییز را ندارید.</h6></li>
+<li><h6>در طول کوییز به زمان باقی‌مانده توجه کنید. صفحه‌ی کوییز پس از اتمام زمان بسته خواهد شد.</h6></li>
+<li><h6>در طول کوییز صفحه را Refresh نکنید.</h6></li>
+<li><h6>نتیجه‌ی کوییز پس از تایید معلم در پنل شما قابل مشاهده خواهد بود.</h6></li><br>
 
 <!-- Button to Open the Modal -->
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
@@ -26,7 +32,7 @@
   
         <!-- Modal body -->
         <div class="modal-body">
-            تعهد می‌دهم که تقلب نکنم.
+            هرگونه تقلب شرعا و اخلاقا نکوهیده است. تعهد می‌دهم در این کوییز صرفا با دانش خودم به سوالات پاسخ دهم و هیچ‌گونه تقلبی را مرتکب نشوم.
         </div>
   
         <!-- Modal footer -->

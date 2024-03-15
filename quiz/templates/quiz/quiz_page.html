@@ -16,7 +16,7 @@
   <div class='col-md-4'>
     <label for="duration" class="form-label">مدت زمان (دقیقه):</label>
     <input type="number" class="form-control" id="duration" name="duration"
-    value={{ duration }} required min="1" max="180">
+    value={{duration}} required min="1" max="180">
   </div>
   <div class="col-md-2">
     <div class="form-check">
@@ -41,10 +41,20 @@
   {% endbuttons %}
 </form>
 
+<h5>سوالات:</h5>
 {% for question in questions %}
 <h6>{{ question.text }}
     {{ question.true_answer }}
 </h6>
+{% endfor %}
+<hr>
+<h5>نتایج:</h5>
+{% for quiz_answer in quiz_answers %}
+  {{ forloop.counter }}-
+  {{ quiz_answer.user.first_name }}
+  {{ quiz_answer.user.last_name }}
+  {{ quiz_answer.answer_duration }}
+  {{ quiz_answer.percent }}<hr>
 {% endfor %}
 
 {% endblock content %}
