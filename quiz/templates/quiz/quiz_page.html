@@ -48,13 +48,38 @@
 </h6>
 {% endfor %}
 <hr>
+{% if quiz_answers %}
 <h5>نتایج:</h5>
-{% for quiz_answer in quiz_answers %}
-  {{ forloop.counter }}-
-  {{ quiz_answer.user.first_name }}
-  {{ quiz_answer.user.last_name }}
-  {{ quiz_answer.answer_duration }}
-  {{ quiz_answer.percent }}<hr>
-{% endfor %}
+<table class="table">
+  <thead>
+    <tr class="table-dark">
+      <th scope="col" class="col-1 text-center">#</th>
+      <th scope="col" class="col-3 text-center">نام</th>
+      <th scope="col" class="col-3 text-center">نام خانوادگی</th>
+      <th scope="col" class="col-3 text-center">درصد</th>
+      <th scope="col" class="col-2 text-center">مدت پاسخ (ثانیه)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {% for quiz_answer in quiz_answers %}
+      <th scope="row" class="text-center">{{ forloop.counter }}</th>
+        <td class="text-center">
+          {{ quiz_answer.user.first_name }}
+        </td>
+        <td class="text-center">
+          {{ quiz_answer.user.last_name }}
+        </td>
+        <td class="text-center">
+          {{ quiz_answer.percent }}
+        </td>
+        <td class="text-center">
+          {{ quiz_answer.answer_duration }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
 
 {% endblock content %}
