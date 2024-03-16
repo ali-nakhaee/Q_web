@@ -4,7 +4,7 @@ from .models import Question, Quiz, QuestionAnswer, QuizAnswer
 
 admin.site.register(Question)
 # admin.site.register(Quiz)
-admin.site.register(QuestionAnswer)
+# admin.site.register(QuestionAnswer)
 # admin.site.register(QuizAnswer)
 
 
@@ -25,3 +25,8 @@ class QuizAnswerInline(admin.TabularInline):
 class QuizAdmin(admin.ModelAdmin):
     list_display = ['id', 'designer', 'title', 'duration']
     inlines = [QuizAnswerInline]
+
+
+@admin.register(QuestionAnswer)
+class QuestionAnswerAdmin(admin.ModelAdmin):
+    list_display = ['id', 'quiz_answer']

@@ -193,6 +193,23 @@ def edit_question(request, question_id):
         form = AddQuestionForm(instance=question, data=request.POST)
         if form.is_valid():
             form.save()
+            # change results of quiz_answers that have this question.
+            quizzes = Quiz.objects.filter(questions=question)
+            quiz_answers = QuizAnswer.objects.filter(quiz__in=quizzes)
+            for quiz_answer in quiz_answers:
+                question_answers = QuestionAnswer.objects.filter(quiz_answer=quiz_answer)
+                all_question_num = quiz_answer.quiz.questions.count()
+                true_answer_num = 0
+                for question_answer in question_answers:
+                    if question_answer.is_answered:
+                        if question_answer.user_answer == question_answer.question.true_answer:
+                            true_answer_num += 1
+                            question_answer.evaluation = True
+                            question_answer.save()
+                if all_question_num != 0:
+                    percent = (true_answer_num / all_question_num) * 100
+                    quiz_answer.percent = percent
+                    quiz_answer.save()
             messages.success(request, 'سوال با موفقیت اصلاح شد.')
             return redirect('quiz:questions')
 
@@ -353,7 +370,7 @@ def quiz_answer_result(request, quiz_answer_id):
         for question in quiz_questions:
             questions.append({'question_text': question.question.text, 'user_answer': question.user_answer,
                               'true_answer': question.question.true_answer})
-        print(questions)
+        # print(questions)
         result_text = f"درصد پاسخ‌گویی شما در این کوییز: {quiz_answer.percent}"
     else:
         result_text = "نتیجه‌ی این کوییز هنوز منتشر نشده است."
