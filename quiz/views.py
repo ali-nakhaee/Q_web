@@ -138,6 +138,7 @@ def take_quiz(request, quiz_id):
             print(quiz_answer.date_answered)
             print('duration:')
             print(answer_duration)
+            messages.success(request, 'کوییز با موفقیت به اتمام رسید.')
             return redirect("quiz:my_panel")
 
     else:
