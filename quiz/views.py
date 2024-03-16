@@ -158,7 +158,7 @@ def add_question(request):
             new_question = form.save(commit=False)
             new_question.owner = request.user
             new_question.save()
-            messages.success(request, 'The question has been added successfully.')
+            messages.success(request, 'سوال با موفقیت اضافه شد.')
             return redirect('quiz:questions')
 
     # Display a blank or invalid form.
@@ -192,7 +192,7 @@ def edit_question(request, question_id):
         form = AddQuestionForm(instance=question, data=request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'The question has been edited successfully.')
+            messages.success(request, 'سوال با موفقیت اصلاح شد.')
             return redirect('quiz:questions')
 
     context = {'form': form, 'question': question}
@@ -283,7 +283,7 @@ def make_quiz(request):
 @login_required
 def quizzes(request):
     """ Show all quizzes for the teacher. """
-    quizzes = Quiz.objects.filter(designer=request.user).order_by('-date_added')
+    quizzes = Quiz.objects.filter(designer=request.user).order_by('-date_created')
     context = {'quizzes': quizzes}
     return render(request, 'quiz/quizzes.html', context)
 
@@ -334,7 +334,7 @@ def my_panel(request):
             not_answered_quiz_ids.append(quiz_id)
     # print(published_quizzes_ids, user_quizanswer_ids, not_answered_quiz_ids)
     # return HttpResponse('hi')
-    not_answered_quizzes = Quiz.objects.filter(id__in=not_answered_quiz_ids)
+    not_answered_quizzes = Quiz.objects.filter(id__in=not_answered_quiz_ids).order_by('date_created')
     answered_quizzes = QuizAnswer.objects.filter(user=user).order_by('-date_answered')
     context = {'not_answered_quizzes': not_answered_quizzes, 'answered_quizzes': answered_quizzes}
     return render(request, 'quiz/my_panel.html', context)
