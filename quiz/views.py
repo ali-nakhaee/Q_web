@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.forms import formset_factory
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
@@ -75,7 +75,8 @@ def quiz(request):
 @login_required
 def take_quiz(request, quiz_id):
     user = request.user
-    quiz = Quiz.objects.get(id=quiz_id)
+    # quiz = Quiz.objects.get(id=quiz_id)
+    quiz = get_object_or_404(Quiz, id=quiz_id)
 
     questions = []
     questions_values = quiz.questions.values()
@@ -240,7 +241,8 @@ def delete_question(request, question_id):
 def commitment(request, quiz_id):
     # Commitment page before start the quiz.
     if request.method == "GET":
-        quiz = Quiz.objects.get(id=quiz_id)
+        # quiz = Quiz.objects.get(id=quiz_id)
+        quiz = get_object_or_404(Quiz, id=quiz_id)
         context = {'quiz_id': quiz_id, 'quiz_duration': quiz.duration,
                    'question_count': quiz.questions.count(),
                    'quiz_title': quiz.title}
@@ -310,7 +312,8 @@ def quizzes(request):
 @login_required
 @permission_required('quiz.change_quiz', raise_exception=True)
 def quiz_page(request, quiz_id):
-    quiz = Quiz.objects.get(id=quiz_id)
+    # quiz = Quiz.objects.get(id=quiz_id)
+    quiz = get_object_or_404(Quiz, id=quiz_id)
     if quiz.designer != request.user:
         raise Http404
     if request.method != "POST":
@@ -362,7 +365,8 @@ def my_panel(request):
 
 @login_required
 def quiz_answer_result(request, quiz_answer_id):
-    quiz_answer = QuizAnswer.objects.get(id=quiz_answer_id)
+    # quiz_answer = QuizAnswer.objects.get(id=quiz_answer_id)
+    quiz_answer = get_object_or_404(QuizAnswer, id=quiz_answer_id)
     if request.user != quiz_answer.user:
         return HttpResponse("This isn't your quiz.")
     result_text = ""
