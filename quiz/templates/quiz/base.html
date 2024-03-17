@@ -32,21 +32,22 @@
     <div class="collapse navbar-collapse ms-3" id="navbarCollapse">
 
         <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'quiz:commitment' 38%}">
-                    کوییز</a></li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'quiz:make_quiz' %}">
-                    ساخت کوییز</a></li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'quiz:quizzes' %}">
-                    تمام کوییزها</a></li>
 
             {% if perms.quiz.view_question %}
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'quiz:questions' %}">
                     تمام سوالات</a></li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'quiz:make_quiz' %}">
+                  ساخت کوییز</a></li>
+          <li class="nav-item">
+              <a class="nav-link" href="{% url 'quiz:quizzes' %}">
+                  تمام کوییزها</a></li>
             {% endif %}
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'quiz:my_panel' %}">
+                  پنل من</a></li>
             </ul>
 
           <ul class="navbar-nav me-auto ms-1">
