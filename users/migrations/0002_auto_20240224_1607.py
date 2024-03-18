@@ -8,7 +8,7 @@ def create_groups(apps, schema_migration):
     Group = apps.get_model('auth', 'Group')
     Permission = apps.get_model('auth', 'Permission')
 
-    add_question = Permission.objects.get(codename='add_question')
+    add_question, created = Permission.objects.get_or_create(codename='add_question')
 
     teachers_permissions = [
         add_question
