@@ -36,8 +36,10 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.role == self.TEACHER:
-            group = Group.objects.get(name='teachers')
+            # group = Group.objects.get(name='teachers')
+            group, created = Group.objects.get_or_create(name='teachers')
             group.user_set.add(self)
         elif self.role == self.STUDENT:
-            group = Group.objects.get(name='students')
+            # group = Group.objects.get(name='students')
+            group, created = Group.objects.get_or_create(name='students')
             group.user_set.add(self)
