@@ -1,0 +1,63 @@
+{% extends "quiz/base.html" %}
+{% load bootstrap5 %}
+
+{% block page_header %}
+  <h3>پنل من</h3>
+{% endblock page_header %}
+
+{% block content %}
+{% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+      <div class="container-fluid p-0">
+        <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+          <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="True">&times;</span>
+          </button>
+          {{ message }}
+        </div>
+      </div>
+      {% endfor %}
+    </ul>
+{% endif %}
+
+<br><h4>کوییزهای من:</h4><br>
+<div class="row">
+{% for quiz in not_answered_quizzes %}
+<div class="col-sm-4 mt-3">
+<div class="card">
+    <div class="card-header">
+      {{ forloop.counter }}
+    </div>
+    <div class="card-body text-center">
+      <h5 class="card-title">{{ quiz.title }}</h5>
+      <a href="{% url 'quiz:commitment' quiz.id %}" class="btn btn-primary">شرکت در کوییز</a>
+    </div>
+  </div>
+</div>
+{% empty %}
+      <li><h5>هیچ کوییز فعالی برای شما وجود ندارد.</h5></li>
+{% endfor %}
+</div>
+<hr>
+
+
+<br><h4>کوییزهای پاسخ‌داده‌شده:</h4><br>
+<div class="row">
+{% for quizanswer in answered_quizzes %}
+<div class="col-sm-4 mt-3">
+<div class="card">
+    <div class="card-header">
+      {{ forloop.counter }}
+    </div>
+    <div class="card-body text-center">
+      <h5 class="card-title">{{ quizanswer.quiz.title }}</h5>
+      <a href="{% url 'quiz:quiz_answer_result' quizanswer.id %}" class="btn btn-primary">مشاهده نتیجه</a>
+    </div>
+  </div>
+</div>
+{% empty %}
+      <li><h5>شما تاکنون در هیچ کوییزی شرکت نکرده‌اید.</h5></li>
+{% endfor %}
+</div><br>
+{% endblock content %}

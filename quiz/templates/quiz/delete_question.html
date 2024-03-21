@@ -1,0 +1,22 @@
+{% extends "quiz/base.html" %} 
+{% load bootstrap4 %}
+
+{% block page_header %}
+  <h3>Delete question</h3>
+{% endblock page_header %}
+
+{% block content %}
+
+<form action="{% url 'quiz:delete_question' question.id %}" method="POST" class="form">
+  {% csrf_token %}
+  <h5>Are you sure that you want to delete the question "{{ question.text }}"?</h5>
+  <div>
+    {% buttons %}
+        <button name="submit" class="btn btn-danger">Yes, Delete</button>
+        <a class="btn btn-secondary" href="{% url 'quiz:questions' %}"
+        role="button">Cancel</a>
+    {% endbuttons %}
+  </div>
+</form>
+
+{% endblock content %}

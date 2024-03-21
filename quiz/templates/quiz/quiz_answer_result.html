@@ -1,0 +1,40 @@
+{% extends "quiz/base.html" %}
+{% load bootstrap5 %}
+
+{% block page_header %}
+  <h3>نتیجه کوییز</h3>
+{% endblock page_header %}
+
+{% block content %}
+    <h4>{{ quiz_title }}<h4><br>
+      <h4>{{ result_text }}</h4><br>
+  {% if questions %}
+  <table class="table">
+    <thead>
+      <tr class="table-dark">
+        <th scope="col" class="col-1 text-center">#</th>
+        <th scope="col" class="col-7">صورت سوال</th>
+        <th scope="col" class="col-2 text-center">پاسخ شما</th>
+        <th scope="col" class="col-2 text-center">پاسخ صحیح</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        {% for question in questions %}
+        <th scope="row" class="text-center">{{ forloop.counter }}</th>
+        <td>
+          {{ question.question_text }}
+        </td>
+        <td class="text-center">
+          {{ question.user_answer }}
+        </td>
+        <td class="text-center">
+          {{ question.true_answer }}
+        </td>
+      </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+      {% endif %}
+  {% endblock content %}
+    

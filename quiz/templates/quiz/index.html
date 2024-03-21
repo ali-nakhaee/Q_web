@@ -1,0 +1,19 @@
+{% extends "quiz/base.html" %}
+
+{% block page_header %}
+    <div class="p-5 mb-4 bg-light rounded-3">
+    <h1 class="display-3">کوییز ریاضی</h1>
+
+    <p class="lead">در «کوییز ریاضی» می‌توانید به راحتی در کوییزهای درس ریاضی شرکت کنید.</p>
+    {% if user.is_authenticated %}
+    <a class="btn btn-lg btn-primary" href="{% url 'quiz:my_panel' %}"
+    role="button">ورود به پنل شخصی &raquo;</a>
+    {% else %}
+    <a class="btn btn-lg btn-primary mt-1" href="{% url 'users:register' %}"
+    role="button">ایجاد حساب کاربری &raquo;</a>
+    <a class="btn btn-lg btn-primary mt-1" href="{% url 'users:login' %}"
+    role="button">ورود به حساب کاربری &raquo;</a>
+    {% endif %}
+</div>
+
+{% endblock page_header %}

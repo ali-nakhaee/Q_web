@@ -1,0 +1,56 @@
+{% extends "quiz/base.html" %}
+{% load bootstrap5 %}
+
+{% block page_header %}
+  <h2>{{ title }}</h2>
+{% endblock page_header %}
+
+{% block content %}
+<h5>مدت کوییز: {{ duration }} دقیقه</h5>
+<p>زمان باقی‌مانده:</p>
+<div id="progressBar">
+  <div class="bar"></div>
+</div>
+
+<form action="{% url 'quiz:take_quiz' quiz_id %}" method='post'>
+    {% csrf_token %}
+{% for question in questions %}
+    <div class="card">
+        <div class="card-header">
+            سوال {{ forloop.counter }}
+          </div>
+        <div class="card-body">
+            <p class="card-text">{{ question.text }}</p>
+            <h6>پاسخ:  <input type="number" step="any" name="answer_{{ forloop.counter0 }}"></input></h6>
+          </div>
+    </div>
+    <br>
+{% endfor %}
+<br>
+{% buttons %}
+    <button name="submit" class="btn btn-primary" id="submit-btn">ارسال پاسخ</button>
+{% endbuttons %}
+</form>
+
+
+
+<script>
+function progress(timeleft, timetotal, $element, startTime) {
+    var progressBarWidth = timeleft * $element.width() / timetotal;
+    $element.find('div').animate({ width: progressBarWidth }, 500).html(Math.floor(timeleft/60) + ":"+ timeleft%60);
+    var nowTime = Math.floor(Date.now()/1000);
+    timeleft = startTime - nowTime + timetotal;
+    if(timeleft > 0) {
+        setTimeout(function() {
+            progress(timeleft - 1, timetotal, $element, startTime);
+        }, 1000);
+    } else {
+        document.getElementById('submit-btn').click();
+    }
+};
+
+var startTime = Math.floor(Date.now()/1000);
+progress({{ duration }} * 60, {{ duration }} * 60, $('#progressBar'), startTime);
+</script>
+
+{% endblock content %}

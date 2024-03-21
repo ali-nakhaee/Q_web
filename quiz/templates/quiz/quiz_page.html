@@ -1,0 +1,85 @@
+{% extends "quiz/base.html" %}
+{% load bootstrap5 %}
+
+{% block page_header %}
+  <h1>{{ quiz_title }}</h1>
+{% endblock page_header %}
+
+{% block content %}
+<form action="{% url 'quiz:quiz_page' quiz_id %}" method='post' class="row g-3">
+  {% csrf_token %}
+  <div class='col-md-4'>
+    <label for="quiz_title" class="form-label">عنوان کوییز:</label>
+      <input type="text" class="form-control" id="quiz_title" name="quiz_title"
+      value="{{ quiz_title }}" required>
+  </div>
+  <div class='col-md-4'>
+    <label for="duration" class="form-label">مدت زمان (دقیقه):</label>
+    <input type="number" class="form-control" id="duration" name="duration"
+    value={{duration}} required min="1" max="180">
+  </div>
+  <div class="col-md-2">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="is_published"
+      name="is_published" {% if is_published %} checked {% endif %}>
+      <label class="form-check-label" for="is_published">
+        کوییز منتشر شود
+      </label>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="answer_published"
+      name="answer_published" {% if answer_published %} checked {% endif %}>
+      <label class="form-check-label" for="answer_published">
+        پاسخ منتشر شود
+      </label>
+    </div>
+  </div>
+  {% buttons %}
+    <button name="submit" class="btn btn-primary">ذخیره</button>
+  {% endbuttons %}
+</form>
+
+<h5>سوالات:</h5>
+{% for question in questions %}
+<h6>{{ question.text }}
+    {{ question.true_answer }}
+</h6>
+{% endfor %}
+<hr>
+{% if quiz_answers %}
+<h5>نتایج:</h5>
+<table class="table">
+  <thead>
+    <tr class="table-dark">
+      <th scope="col" class="col-1 text-center">#</th>
+      <th scope="col" class="col-3 text-center">نام</th>
+      <th scope="col" class="col-3 text-center">نام خانوادگی</th>
+      <th scope="col" class="col-3 text-center">درصد</th>
+      <th scope="col" class="col-2 text-center">مدت پاسخ (ثانیه)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {% for quiz_answer in quiz_answers %}
+      <th scope="row" class="text-center">{{ forloop.counter }}</th>
+        <td class="text-center">
+          {{ quiz_answer.user.first_name }}
+        </td>
+        <td class="text-center">
+          {{ quiz_answer.user.last_name }}
+        </td>
+        <td class="text-center">
+          {{ quiz_answer.percent }}
+        </td>
+        <td class="text-center">
+          {{ quiz_answer.answer_duration }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+{% endblock content %}

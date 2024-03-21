@@ -1,0 +1,49 @@
+{% extends "quiz/base.html" %}
+{% load bootstrap5 %}
+
+
+{% block page_header %}
+  <h1>تمام سوالات</h1>
+{% endblock page_header %}
+
+{% block content %}
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+      <div class="container-fluid p-0">
+        <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+          <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="True">&times;</span>
+          </button>
+          {{ message }}
+        </div>
+      </div>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+  <ul>
+    {% for question in questions %}
+    <div class="card">
+      <div class="card-body">
+      <h5>{{ question.text }}
+      {{ question.true_answer }}</h5>
+      </div>
+    </div>
+      {{ buttons }}
+      <a class="btn btn-outline-primary" href="{% url 'quiz:edit_question' question.id %}"
+      role="button">اصلاح سوال</a>
+      <a class="btn btn-outline-danger" href="{% url 'quiz:delete_question' question.id %}"
+      role="button">حذف سوال</a>
+      {{ endbuttons }} <br>
+  
+    {% empty %}
+      <li><h4>تاکنون هیچ سوالی اضافه نکرده‌اید.</h4></li>
+    {% endfor %}
+  </ul>
+  {{ buttons }}
+      <a class="btn btn-primary" href="{% url 'quiz:add_question' %}"
+      role="button">اضافه کردن سوال</a>
+      {{ endbuttons }} <br>
+
+{% endblock content %}
