@@ -9,6 +9,11 @@ from django.http import Http404, HttpResponse
 from .models import Question, Quiz, QuestionAnswer, QuizAnswer
 from .forms import QuestionForm, AddQuestionForm
 
+from rest_framework import status
+from rest_framework.request import Request
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
 
 def index(request):
     """The home page for Q_web."""
@@ -384,3 +389,9 @@ def quiz_answer_result(request, quiz_answer_id):
     context = {'result_text': result_text, 'questions': questions,
                'quiz_title': quiz_answer.quiz.title}
     return render(request, 'quiz/quiz_answer_result.html', context)
+
+
+@api_view(['GET'])
+def quiz_api(request: Request):
+    quizzes = list(Quiz.objects.all().order_by('-date_created').values('title', 'duration'))
+    return Response({'quizzes': quizzes}, status.HTTP_200_OK)
