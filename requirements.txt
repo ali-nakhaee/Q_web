@@ -7,3 +7,4 @@ whitenoise
 django-bootstrap-v5
 bootstrap4
 bootstrap5
+djangorestframework
