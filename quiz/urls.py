@@ -33,5 +33,5 @@ urlpatterns = [
     # page for quiz_answer result
     path('quiz_answer_result/<int:quiz_answer_id>/', views.quiz_answer_result, name='quiz_answer_result'),
     # api
-    path('api_quiz', views.quiz_api)
+    path('quiz_api', views.quiz_api)
 ]
