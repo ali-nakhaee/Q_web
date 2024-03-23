@@ -400,7 +400,7 @@ def quiz_api(request: Request):
 
 
 @api_view(['GET', 'POST'])
-def question_api(request: Request):
+def questions_api(request: Request):
     if request.method == 'GET':
         questions = Question.objects.filter(owner=request.user).order_by('-date_added')
         question_serializer = QuestionSerializer(questions, many=True)
@@ -417,3 +417,13 @@ def question_api(request: Request):
         return Response(serializer.error_messages)
 
     return Response(None, status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def question_api(request: Request, question_id):
+    try:
+        question = Question.objects.get(id=question_id)
+    except question.DoesNotExist:
+        return Response(None, status.HTTP_404_NOT_FOUND)
+    serializer = QuestionSerializer(question)
+    return Response(serializer.data, status.HTTP_200_OK)
