@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'bootstrap5',
     'rest_framework',
+    'rest_framework.authtoken',
     # 'debug_toolbar',
 
 
@@ -146,3 +147,9 @@ INTERNAL_IPS = [
 ]
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}

@@ -423,7 +423,7 @@ def questions_api(request: Request):
 def question_api(request: Request, question_id):
     try:
         question = Question.objects.get(id=question_id)
-    except question.DoesNotExist:
+    except Question.DoesNotExist:
         return Response(None, status.HTTP_404_NOT_FOUND)
     serializer = QuestionSerializer(question)
     return Response(serializer.data, status.HTTP_200_OK)
