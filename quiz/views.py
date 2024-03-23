@@ -394,13 +394,26 @@ def quiz_answer_result(request, quiz_answer_id):
 
 @api_view(['GET'])
 def quiz_api(request: Request):
-    quizzes = Quiz.objects.all().order_by('-date_created')
+    quizzes = Quiz.objects.filter(is_published=True).order_by('-date_created')
     quiz_serializer = QuizSerializer(quizzes, many=True)
     return Response(quiz_serializer.data, status.HTTP_200_OK)
 
 
 @api_view(['GET', 'POST'])
 def question_api(request: Request):
-    questions = Question.objects.filter(owner=request.user).order_by('-date_added')
-    question_serializer = QuestionSerializer(questions, many=True)
-    return Response(question_serializer.data, status.HTTP_200_OK)
+    if request.method == 'GET':
+        questions = Question.objects.filter(owner=request.user).order_by('-date_added')
+        question_serializer = QuestionSerializer(questions, many=True)
+        return Response(question_serializer.data, status.HTTP_200_OK)
+    
+    elif request.method == 'POST':
+        serializer = QuestionSerializer(data=request.data)
+        if serializer.is_valid():
+            new_question = serializer.save(commitment=False)
+            new_question.owner = request.user
+            new_question.date_added = datetime.now().astimezone()
+            new_question.save()
+            return Response(serializer.data, status.HTTP_201_CREATED)
+        return Response(serializer.error_messages)
+
+    return Response(None, status.HTTP_400_BAD_REQUEST)

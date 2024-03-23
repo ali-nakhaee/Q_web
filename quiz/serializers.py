@@ -12,4 +12,5 @@ class QuizSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = '__all__'
+        fields = ['text', 'true_answer']   #'__all__'
+        # read_only_fields = ('date_added', 'owner')
