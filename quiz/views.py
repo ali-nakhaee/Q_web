@@ -402,9 +402,11 @@ def quiz_api(request: Request):
 @api_view(['GET', 'POST'])
 def questions_api(request: Request):
     if request.method == 'GET':
-        questions = Question.objects.filter(owner=request.user).order_by('-date_added')
-        question_serializer = QuestionSerializer(questions, many=True)
-        return Response(question_serializer.data, status.HTTP_200_OK)
+        if request.user.is_authenticated:
+            questions = Question.objects.filter(owner=request.user).order_by('-date_added')
+            question_serializer = QuestionSerializer(questions, many=True)
+            return Response(question_serializer.data, status.HTTP_200_OK)
+        return Response(None, status.HTTP_403_FORBIDDEN)
     
     elif request.method == 'POST':
         serializer = QuestionSerializer(data=request.data)
