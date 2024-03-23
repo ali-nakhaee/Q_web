@@ -8,7 +8,7 @@ from django.http import Http404, HttpResponse
 
 from .models import Question, Quiz, QuestionAnswer, QuizAnswer
 from .forms import QuestionForm, AddQuestionForm
-from .serializers import QuizSerializer
+from .serializers import QuizSerializer, QuestionSerializer
 
 from rest_framework import status
 from rest_framework.request import Request
@@ -397,3 +397,10 @@ def quiz_api(request: Request):
     quizzes = Quiz.objects.all().order_by('-date_created')
     quiz_serializer = QuizSerializer(quizzes, many=True)
     return Response(quiz_serializer.data, status.HTTP_200_OK)
+
+
+@api_view(['GET', 'POST'])
+def question_api(request: Request):
+    questions = Question.objects.filter(owner=request.user).order_by('-date_added')
+    question_serializer = QuestionSerializer(questions, many=True)
+    return Response(question_serializer.data, status.HTTP_200_OK)
