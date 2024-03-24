@@ -10,10 +10,11 @@ from .models import Question, Quiz, QuestionAnswer, QuizAnswer
 from .forms import QuestionForm, AddQuestionForm
 from .serializers import QuizSerializer, QuestionSerializer
 
-from rest_framework import status
+from rest_framework import status, mixins, generics
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 
 
 def index(request):
@@ -77,79 +78,7 @@ def quiz(request):
     context = {'formset': formset, 'percent': percent}
     return render(request, 'quiz/quiz.html', context)
 
-
-@login_required
-def take_quiz(request, quiz_id):
-    user = request.user
-    # quiz = Quiz.objects.get(id=quiz_id)
-    quiz = get_object_or_404(Quiz, id=quiz_id)
-
-    questions = []
-    questions_values = quiz.questions.values()
-    for question in questions_values:
-        questions.append({'id': question['id'], 'text': question['text'],
-                          'true_answer': question['true_answer']})
-    if request.method == "GET":
-        # check if the user has taken the quiz in the past
-        if len(QuizAnswer.objects.filter(user=user, quiz=quiz)) != 1:
-            return HttpResponse('You have taken this quiz in the past!')
-        else:
-            if QuizAnswer.objects.get(user=user, quiz=quiz).answer_duration != 1:
-                return HttpResponse('You have taken this quiz in the past!')
-            else:
-                context = {'title': quiz.title, 'quiz_id': quiz.id,
-                           'duration': quiz.duration, 'questions': questions}
-                return render(request, 'quiz/take_quiz.html', context)
-    
-    elif request.method == "POST":
-        quiz_answer = QuizAnswer.objects.filter(quiz=quiz, user=user).order_by('-date_started')[0]
-        if quiz_answer.answer_duration != 1:
-            return HttpResponse('You have taken this quiz in the past!')
-        quiz_duration = quiz_answer.quiz.duration * 60
-        submit_time = datetime.now().astimezone()
-        if (submit_time - quiz_answer.date_started).total_seconds() > (quiz_duration + 10):
-            return HttpResponse('Your answer is out of duration!')
-        else:
-            all_questions_num = len(questions)
-            true_answers_num = 0
-            for i in range(len(questions)):
-                user_answer = request.POST.get(f"answer_{i}")
-                question_id = questions[i]['id']
-                question = Question.objects.get(id=question_id)
-                if user_answer != '':
-                    is_answered = True
-                    if float(user_answer) == questions[i]['true_answer']:
-                        evaluation = True
-                        true_answers_num += 1
-                    else:
-                        evaluation = False
-                else:
-                    user_answer = None
-                    is_answered = False
-                    evaluation = False
-                question_answer = QuestionAnswer.objects.create(question=question, user_answer=user_answer,
-                                                                quiz=quiz, is_answered=is_answered,
-                                                                evaluation=evaluation, quiz_answer=quiz_answer)
-
-            if all_questions_num == 0:
-                percent = 0
-            else:
-                percent = (true_answers_num / all_questions_num) * 100
-            quiz_answer.percent = percent
-            quiz_answer.date_answered = datetime.now().astimezone()
-            answer_duration = (quiz_answer.date_answered - quiz_answer.date_started).total_seconds()
-            quiz_answer.answer_duration = answer_duration
-            quiz_answer.save()
-            print('finish time:')
-            print(quiz_answer.date_answered)
-            print('duration:')
-            print(answer_duration)
-            messages.success(request, 'کوییز با موفقیت به اتمام رسید.')
-            return redirect("quiz:my_panel")
-
-    else:
-        return HttpResponse('method not allowed!')
-
+#region question
 
 @login_required
 @permission_required('quiz.add_question', raise_exception=True)
@@ -242,6 +171,10 @@ def delete_question(request, question_id):
         messages.success(request, 'سوال با موفقیت حذف شد.')
         return redirect('quiz:questions')
 
+#endregion
+
+
+#region quiz
 
 @login_required
 def commitment(request, quiz_id):
@@ -304,6 +237,79 @@ def make_quiz(request):
 
         messages.success(request, 'کوییز با موفقیت ایجاد شد.')
         return redirect('quiz:quizzes')
+
+
+@login_required
+def take_quiz(request, quiz_id):
+    user = request.user
+    # quiz = Quiz.objects.get(id=quiz_id)
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+
+    questions = []
+    questions_values = quiz.questions.values()
+    for question in questions_values:
+        questions.append({'id': question['id'], 'text': question['text'],
+                          'true_answer': question['true_answer']})
+    if request.method == "GET":
+        # check if the user has taken the quiz in the past
+        if len(QuizAnswer.objects.filter(user=user, quiz=quiz)) != 1:
+            return HttpResponse('You have taken this quiz in the past!')
+        else:
+            if QuizAnswer.objects.get(user=user, quiz=quiz).answer_duration != 1:
+                return HttpResponse('You have taken this quiz in the past!')
+            else:
+                context = {'title': quiz.title, 'quiz_id': quiz.id,
+                           'duration': quiz.duration, 'questions': questions}
+                return render(request, 'quiz/take_quiz.html', context)
+    
+    elif request.method == "POST":
+        quiz_answer = QuizAnswer.objects.filter(quiz=quiz, user=user).order_by('-date_started')[0]
+        if quiz_answer.answer_duration != 1:
+            return HttpResponse('You have taken this quiz in the past!')
+        quiz_duration = quiz_answer.quiz.duration * 60
+        submit_time = datetime.now().astimezone()
+        if (submit_time - quiz_answer.date_started).total_seconds() > (quiz_duration + 10):
+            return HttpResponse('Your answer is out of duration!')
+        else:
+            all_questions_num = len(questions)
+            true_answers_num = 0
+            for i in range(len(questions)):
+                user_answer = request.POST.get(f"answer_{i}")
+                question_id = questions[i]['id']
+                question = Question.objects.get(id=question_id)
+                if user_answer != '':
+                    is_answered = True
+                    if float(user_answer) == questions[i]['true_answer']:
+                        evaluation = True
+                        true_answers_num += 1
+                    else:
+                        evaluation = False
+                else:
+                    user_answer = None
+                    is_answered = False
+                    evaluation = False
+                question_answer = QuestionAnswer.objects.create(question=question, user_answer=user_answer,
+                                                                quiz=quiz, is_answered=is_answered,
+                                                                evaluation=evaluation, quiz_answer=quiz_answer)
+
+            if all_questions_num == 0:
+                percent = 0
+            else:
+                percent = (true_answers_num / all_questions_num) * 100
+            quiz_answer.percent = percent
+            quiz_answer.date_answered = datetime.now().astimezone()
+            answer_duration = (quiz_answer.date_answered - quiz_answer.date_started).total_seconds()
+            quiz_answer.answer_duration = answer_duration
+            quiz_answer.save()
+            print('finish time:')
+            print(quiz_answer.date_answered)
+            print('duration:')
+            print(answer_duration)
+            messages.success(request, 'کوییز با موفقیت به اتمام رسید.')
+            return redirect("quiz:my_panel")
+
+    else:
+        return HttpResponse('method not allowed!')
 
 
 @login_required
@@ -391,6 +397,10 @@ def quiz_answer_result(request, quiz_answer_id):
                'quiz_title': quiz_answer.quiz.title}
     return render(request, 'quiz/quiz_answer_result.html', context)
 
+#endregion
+
+
+#region FBV api
 
 @api_view(['GET'])
 def quiz_api(request: Request):
@@ -443,3 +453,65 @@ def question_api(request: Request, question_id):
     elif request.method == 'DELETE':
         question.delete()
         return Response(None, status.HTTP_204_NO_CONTENT)
+
+#endregion
+    
+
+#region CBV api
+class QuestionApiView(APIView):
+    def get_object(self, question_id):
+        try:
+            question = Question.objects.get(id=question_id)
+            return question
+        except Question.DoesNotExist:
+            return None
+        
+
+    def is_owner(self, request: Request, question_id):
+        question = self.get_object(question_id)
+        if request.user == question.owner:
+            return True
+        return False
+        
+
+    def get(self, request: Request, question_id):
+        question = self.get_object(question_id)
+        if not question:
+            return Response(None, status.HTTP_404_NOT_FOUND)
+        if not self.is_owner(request, question_id):
+            return Response({'message': 'This is not your question'}, status.HTTP_403_FORBIDDEN)
+        serializer = QuestionSerializer(question)
+        return Response(serializer.data, status.HTTP_200_OK)
+        
+
+    def put(self, request: Request, question_id):
+        question = self.get_object(question_id)
+        if not question:
+            return Response(None, status.HTTP_404_NOT_FOUND)
+        if not self.is_owner(request, question_id):
+            return Response({'message': 'This is not your question'}, status.HTTP_403_FORBIDDEN)
+        serializer = QuestionSerializer(question, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status.HTTP_202_ACCEPTED)
+        return Response(None, status.HTTP_400_BAD_REQUEST)
+    
+
+    def delete(self, request: Request, question_id):
+        question = self.get_object(question_id)
+        if not question:
+            return Response(None, status.HTTP_404_NOT_FOUND)
+        if not self.is_owner(request, question_id):
+            return Response({'message': 'This is not your question'}, status.HTTP_403_FORBIDDEN)
+        question.delete()
+        return Response({'message': 'Question deleted.'}, status.HTTP_204_NO_CONTENT)
+
+
+class QuizMixinApiView(mixins.ListModelMixin, generics.GenericAPIView):
+    queryset = Quiz.objects.filter(is_published=True).order_by('date_created')
+    serializer_class = QuizSerializer
+
+    def get(self, request: Request):
+        return self.list(request)
+
+#endregion

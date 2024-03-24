@@ -34,4 +34,4 @@ class QuestionAnswerAdmin(admin.ModelAdmin):
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ['id', 'text']
+    list_display = ['id', 'text', 'owner']
