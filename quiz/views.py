@@ -411,21 +411,35 @@ def questions_api(request: Request):
     elif request.method == 'POST':
         serializer = QuestionSerializer(data=request.data)
         if serializer.is_valid():
-            new_question = serializer.save(commitment=False)
-            new_question.owner = request.user
-            new_question.date_added = datetime.now().astimezone()
-            new_question.save()
+            owner_id = request.user.id
+            serializer.save(owner_id=owner_id)
             return Response(serializer.data, status.HTTP_201_CREATED)
         return Response(serializer.error_messages)
 
     return Response(None, status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def question_api(request: Request, question_id):
     try:
         question = Question.objects.get(id=question_id)
     except Question.DoesNotExist:
         return Response(None, status.HTTP_404_NOT_FOUND)
-    serializer = QuestionSerializer(question)
-    return Response(serializer.data, status.HTTP_200_OK)
+    
+    if not request.user == question.owner:
+        return Response({'message': 'This is not your question'}, status.HTTP_403_FORBIDDEN)
+    
+    if request.method == 'GET':
+        serializer = QuestionSerializer(question)
+        return Response(serializer.data, status.HTTP_200_OK)
+    
+    elif request.method == 'PUT':
+        serializer = QuestionSerializer(question, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status.HTTP_202_ACCEPTED)
+        return Response(None, status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == 'DELETE':
+        question.delete()
+        return Response(None, status.HTTP_204_NO_CONTENT)
