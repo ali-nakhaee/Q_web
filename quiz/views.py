@@ -15,6 +15,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
 
 def index(request):
@@ -78,7 +79,8 @@ def quiz(request):
     context = {'formset': formset, 'percent': percent}
     return render(request, 'quiz/quiz.html', context)
 
-#region question
+# region question
+
 
 @login_required
 @permission_required('quiz.add_question', raise_exception=True)
@@ -171,10 +173,10 @@ def delete_question(request, question_id):
         messages.success(request, 'سوال با موفقیت حذف شد.')
         return redirect('quiz:questions')
 
-#endregion
+# endregion
 
 
-#region quiz
+# region quiz
 
 @login_required
 def commitment(request, quiz_id):
@@ -397,10 +399,10 @@ def quiz_answer_result(request, quiz_answer_id):
                'quiz_title': quiz_answer.quiz.title}
     return render(request, 'quiz/quiz_answer_result.html', context)
 
-#endregion
+# endregion
 
 
-#region FBV api
+# region FBV api
 
 @api_view(['GET'])
 def quiz_api(request: Request):
@@ -454,10 +456,10 @@ def question_api(request: Request, question_id):
         question.delete()
         return Response(None, status.HTTP_204_NO_CONTENT)
 
-#endregion
+# endregion
     
 
-#region CBV api
+# region CBV api
 class QuestionApiView(APIView):
     def get_object(self, question_id):
         try:
@@ -465,14 +467,12 @@ class QuestionApiView(APIView):
             return question
         except Question.DoesNotExist:
             return None
-        
 
     def is_owner(self, request: Request, question_id):
         question = self.get_object(question_id)
         if request.user == question.owner:
             return True
         return False
-        
 
     def get(self, request: Request, question_id):
         question = self.get_object(question_id)
@@ -482,7 +482,6 @@ class QuestionApiView(APIView):
             return Response({'message': 'This is not your question'}, status.HTTP_403_FORBIDDEN)
         serializer = QuestionSerializer(question)
         return Response(serializer.data, status.HTTP_200_OK)
-        
 
     def put(self, request: Request, question_id):
         question = self.get_object(question_id)
@@ -495,7 +494,6 @@ class QuestionApiView(APIView):
             serializer.save()
             return Response(serializer.data, status.HTTP_202_ACCEPTED)
         return Response(None, status.HTTP_400_BAD_REQUEST)
-    
 
     def delete(self, request: Request, question_id):
         question = self.get_object(question_id)
@@ -510,8 +508,9 @@ class QuestionApiView(APIView):
 class QuizMixinApiView(mixins.ListModelMixin, generics.GenericAPIView):
     queryset = Quiz.objects.filter(is_published=True).order_by('date_created')
     serializer_class = QuizSerializer
+    permission_classes = [IsAuthenticated]
 
     def get(self, request: Request):
         return self.list(request)
 
-#endregion
+# endregion
