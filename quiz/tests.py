@@ -11,7 +11,7 @@ class TestModels(TestCase):
                                    last_name='na')
         question1 = Question.objects.create(text='2+2=', owner=user1, true_answer=4)
         quiz1 = Quiz.objects.create(title='quiz1', designer=user1, duration=1,
-                                    is_published=True, answer_published=True)
+                                    is_published=True, answer_published=False)
         quiz1.questions.add(question1)
         quiz_answer1 = QuizAnswer.objects.create(user=user1, quiz=quiz1, percent=100,
                                                  answer_duration=20)
@@ -22,6 +22,14 @@ class TestModels(TestCase):
         question = Question.objects.get(text='2+2=')
         self.assertEqual(question.owner.username, 'ali')
         
+    def test_quiz(self):
+        quiz = Quiz.objects.get(title='quiz1')
+        self.assertTrue(quiz.is_published)
+        self.assertFalse(quiz.answer_published)
+
+    def test_quiz_answer(self):
+        quiz_answer = QuizAnswer.objects.get(user__username='ali')
+        self.assertEqual(quiz_answer.answer_duration, 20)
         
     def test_question_answer(self):
         question_answer = QuestionAnswer.objects.get(question__text='2+2=')
