@@ -5,7 +5,7 @@ from .models import Question, Quiz, QuestionAnswer, QuizAnswer
 User = get_user_model()
 
 
-class TestQuestionModel(TestCase):
+class TestModels(TestCase):
     def setUp(self):
         user1 = User.objects.create(username='ali', password='123', first_name='ali',
                                    last_name='na')
@@ -18,11 +18,12 @@ class TestQuestionModel(TestCase):
         QuestionAnswer.objects.create(question=question1, quiz=quiz1, quiz_answer=quiz_answer1,
                                         user_answer=4, is_answered=True, evaluation=True)
         
+    def test_question(self):
+        question = Question.objects.get(text='2+2=')
+        self.assertEqual(question.owner.username, 'ali')
+        
         
     def test_question_answer(self):
         question_answer = QuestionAnswer.objects.get(question__text='2+2=')
         self.assertEqual(question_answer.user_answer, 4)
-
-    def test_question_edit(self):
-        pass
 
