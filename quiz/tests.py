@@ -63,7 +63,7 @@ class TestEditQuestionView(TestCase):
         user2 = User.objects.get(username='mohammad')
         quiz_answer1 = QuizAnswer.objects.get(user=user1)
         quiz_answer2 = QuizAnswer.objects.get(user=user2)
-        # self.assertEqual(quiz_answer1.percent, 0)
-        # self.assertEqual(quiz_answer2.percent, 100)
+        self.assertEqual(quiz_answer1.percent, 0)
+        self.assertEqual(quiz_answer2.percent, 100)
         self.assertEqual(response.status_code, 200)
 
