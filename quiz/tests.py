@@ -57,7 +57,7 @@ class TestEditQuestionView(TestCase):
     def test_edit_question(self):
         question_id = Question.objects.get(text='2+2=').id
         data = {'text': '2+2=', 'true_answe': 4}
-        # response = self.client.post(f"/edit_question/{question_id}/", data=data)
+        response = self.client.post(f"/edit_question/{question_id}/", data=data)
         response = self.client.get(f"/edit_question/{question_id}/")
         user1 = User.objects.get(username='ali')
         user2 = User.objects.get(username='mohammad')
