@@ -1,7 +1,8 @@
-from django.test import TestCase, Client
+from django.test import TestCase, RequestFactory
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from .models import Question, Quiz, QuestionAnswer, QuizAnswer
+from .views import edit_question
 
 User = get_user_model()
 
@@ -38,17 +39,18 @@ class TestModels(TestCase):
 
 class TestEditQuestionView(TestCase):
     def setUp(self):
-        user1 = User.objects.create(username='ali', password='123', first_name='ali',
+        self.factory = RequestFactory()
+        self.user1 = User.objects.create_user(username='ali', password='123', first_name='ali',
                                    last_name='na')
         permission = Permission.objects.get(codename='change_question')
-        user1.user_permissions.add(permission)
+        self.user1.user_permissions.add(permission)
         user2 = User.objects.create(username='mohammad', password='123', first_name='mohammad',
                                    last_name='na')
-        question1 = Question.objects.create(text='2+2=', owner=user1, true_answer=3)
-        quiz1 = Quiz.objects.create(title='quiz1', designer=user1, duration=1,
+        question1 = Question.objects.create(text='2+2=', owner=self.user1, true_answer=3)
+        quiz1 = Quiz.objects.create(title='quiz1', designer=self.user1, duration=1,
                                     is_published=True, answer_published=False)
         quiz1.questions.add(question1)
-        quiz_answer1 = QuizAnswer.objects.create(user=user1, quiz=quiz1, percent=100,
+        quiz_answer1 = QuizAnswer.objects.create(user=self.user1, quiz=quiz1, percent=100,
                                                  answer_duration=20)
         QuestionAnswer.objects.create(question=question1, quiz=quiz1, quiz_answer=quiz_answer1,
                                         user_answer=3, is_answered=True, evaluation=True)
@@ -60,10 +62,10 @@ class TestEditQuestionView(TestCase):
     def test_edit_question(self):
         question_id = Question.objects.get(text='2+2=').id
         data = {'text': '2+2=', 'true_answe': 4}
-        client = Client()
-        client.login(username='ali', password='123')
         # response = self.client.post(f"/edit_question/{question_id}/", data=data)
-        response = self.client.get(f"/edit_question/{question_id}/")
+        request = self.factory.get(f"/edit_question/{question_id}/")
+        request.user = self.user1
+        response = edit_question(request, question_id)
         user1 = User.objects.get(username='ali')
         user2 = User.objects.get(username='mohammad')
         quiz_answer1 = QuizAnswer.objects.get(user=user1)
