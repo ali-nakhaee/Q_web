@@ -71,7 +71,7 @@
           {{ quiz_answer.user.last_name }}
         </td>
         <td class="text-center">
-          {{ quiz_answer.percent }}
+          <a href="{% url 'quiz:quiz_answer_result' quiz_answer.id %}">{{ quiz_answer.percent }}</a>
         </td>
         <td class="text-center">
           {{ quiz_answer.answer_duration }}

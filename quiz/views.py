@@ -381,23 +381,24 @@ def my_panel(request):
 def quiz_answer_result(request, quiz_answer_id):
     # quiz_answer = QuizAnswer.objects.get(id=quiz_answer_id)
     quiz_answer = get_object_or_404(QuizAnswer, id=quiz_answer_id)
-    if request.user != quiz_answer.user:
-        return HttpResponse("This isn't your quiz.")
-    result_text = ""
-    questions = []
-    if quiz_answer.quiz.answer_published:
-        quiz_questions = QuestionAnswer.objects.filter(quiz_answer=quiz_answer)
-        for question in quiz_questions:
-            questions.append({'question_text': question.question.text, 'user_answer': question.user_answer,
-                              'true_answer': question.question.true_answer})
-        # print(questions)
-        result_text = f"درصد پاسخ‌گویی شما در این کوییز: {quiz_answer.percent}"
-    else:
-        result_text = "نتیجه‌ی این کوییز هنوز منتشر نشده است."
-    
-    context = {'result_text': result_text, 'questions': questions,
-               'quiz_title': quiz_answer.quiz.title}
-    return render(request, 'quiz/quiz_answer_result.html', context)
+    quiz = quiz_answer.quiz
+    if request.user == quiz_answer.user or request.user == quiz.designer:
+        result_text = ""
+        questions = []
+        if quiz_answer.quiz.answer_published:
+            quiz_questions = QuestionAnswer.objects.filter(quiz_answer=quiz_answer)
+            for question in quiz_questions:
+                questions.append({'question_text': question.question.text, 'user_answer': question.user_answer,
+                                'true_answer': question.question.true_answer})
+            # print(questions)
+            result_text = f"درصد پاسخ‌گویی شما در این کوییز: {quiz_answer.percent}"
+        else:
+            result_text = "نتیجه‌ی این کوییز هنوز منتشر نشده است."
+        
+        context = {'result_text': result_text, 'questions': questions,
+                'quiz_title': quiz_answer.quiz.title}
+        return render(request, 'quiz/quiz_answer_result.html', context)
+    return HttpResponse("This isn't your quiz.")
 
 # endregion
 

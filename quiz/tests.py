@@ -63,14 +63,15 @@ class TestEditQuestionView(TestCase):
         question_id = Question.objects.get(text='2+2=').id
         data = {'text': '2+2=', 'true_answe': 4}
         # response = self.client.post(f"/edit_question/{question_id}/", data=data)
-        request = self.factory.get(f"/edit_question/{question_id}/")
+        # request = self.factory.get(f"/edit_question/{question_id}/")
+        request = self.factory.post(f"/edit_question/{question_id}/", data=data)
         request.user = self.user1
         response = edit_question(request, question_id)
         user1 = User.objects.get(username='ali')
         user2 = User.objects.get(username='mohammad')
         quiz_answer1 = QuizAnswer.objects.get(user=user1)
         quiz_answer2 = QuizAnswer.objects.get(user=user2)
-        # self.assertEqual(quiz_answer1.percent, 0)
-        # self.assertEqual(quiz_answer2.percent, 100)
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(quiz_answer1.percent, 0)
+        self.assertEqual(quiz_answer2.percent, 100)
 
