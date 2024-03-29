@@ -372,7 +372,7 @@ def my_panel(request):
     # print(published_quizzes_ids, user_quizanswer_ids, not_answered_quiz_ids)
     # return HttpResponse('hi')
     not_answered_quizzes = Quiz.objects.filter(id__in=not_answered_quiz_ids).order_by('date_created')
-    answered_quizzes = QuizAnswer.objects.filter(user=user).order_by('-date_answered')
+    answered_quizzes = QuizAnswer.objects.filter(user=user).exclude(answer_duration=1).order_by('-date_answered')
     context = {'not_answered_quizzes': not_answered_quizzes, 'answered_quizzes': answered_quizzes}
     return render(request, 'quiz/my_panel.html', context)
 
