@@ -26,4 +26,6 @@ db.sqlite3
 .history/
 *.code-workspace
 
+htmlcov/
+.coverage
 .idea/
