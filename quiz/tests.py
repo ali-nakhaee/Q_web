@@ -9,6 +9,7 @@ User = get_user_model()
 
 
 class TestModels(TestCase):
+    fixtures = ['sample_fixture.json']
     def setUp(self):
         user1 = User.objects.create(username='ali', password='123', first_name='ali',
                                    last_name='na')
@@ -24,6 +25,9 @@ class TestModels(TestCase):
     def test_question(self):
         question = Question.objects.get(text='2+2=')
         self.assertEqual(question.owner.username, 'ali')
+        # test fixture file added
+        question_num = Question.objects.all().count()
+        self.assertEqual(question_num, 3)
         
     def test_quiz(self):
         quiz = Quiz.objects.get(title='quiz1')
