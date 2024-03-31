@@ -25,7 +25,7 @@ class TestModels(TestCase):
     def test_question(self):
         question = Question.objects.get(text='2+2=')
         self.assertEqual(question.owner.username, 'ali')
-        # test fixture file added
+        # sample fixture file added, question number checked.
         question_num = Question.objects.all().count()
         self.assertEqual(question_num, 3)
         
